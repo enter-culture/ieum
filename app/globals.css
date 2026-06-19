@@ -24,3 +24,15 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes float-up {
+  0%   { transform: translateY(0) scale(1);    opacity: 1; }
+  100% { transform: translateY(-280px) scale(0.4); opacity: 0; }
+}
+
+.animate-float-up {
+  animation: float-up 1.5s ease-out forwards;
+}
+
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }

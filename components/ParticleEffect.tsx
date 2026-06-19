@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 const EMOJIS = ['🤍', '🐱', '🐶', '🐾', '💕']
 
@@ -15,6 +15,9 @@ interface Props {
 
 export default function ParticleEffect({ trigger }: Props) {
   const [particles, setParticles] = useState<Particle[]>([])
+  // render 시점에 최신 trigger를 기록 — cleanup에서 "새 trigger로 변경됐는지" 판단에 사용
+  const latestTriggerRef = useRef(trigger)
+  latestTriggerRef.current = trigger
 
   useEffect(() => {
     if (trigger === 0) return
@@ -32,7 +35,14 @@ export default function ParticleEffect({ trigger }: Props) {
       setParticles(prev => prev.filter(p => p.id !== id))
     }, 1500)
 
-    return () => clearTimeout(timer)
+    return () => {
+      clearTimeout(timer)
+      // latestTriggerRef.current === trigger: StrictMode 재실행(같은 trigger 값)
+      // latestTriggerRef.current !== trigger: 새 trigger 값 — 타이머가 파티클 제거를 담당
+      if (latestTriggerRef.current === trigger) {
+        setParticles(prev => prev.filter(p => p.id !== id))
+      }
+    }
   }, [trigger])
 
   return (

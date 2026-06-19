@@ -31,6 +31,7 @@ export default function HeritageCard({ heritage }: Props) {
           <LikeButton initialCount={heritage.likes} onLike={handleLike} />
           <Link
             href={`/heritage/${heritage.id}`}
+            aria-label={`${heritage.name} 더보기`}
             className="text-white text-sm border border-white/60 px-3 py-1 rounded-full backdrop-blur-sm"
           >
             더보기 →

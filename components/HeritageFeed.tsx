@@ -22,7 +22,7 @@ export default function HeritageFeed({ items }: Props) {
     const el = containerRef.current
     if (!el) return
     el.scrollTo({ left: index * el.clientWidth, behavior: 'smooth' })
-    setActiveIndex(index)
+    // setActiveIndex 제거 — handleScroll이 처리
   }
 
   return (
@@ -45,7 +45,7 @@ export default function HeritageFeed({ items }: Props) {
             key={i}
             aria-label={`페이지 ${i + 1}`}
             onClick={() => goTo(i)}
-            className={`w-1.5 h-1.5 rounded-full pointer-events-auto transition-all duration-200 ${
+            className={`w-1.5 h-1.5 rounded-full pointer-events-auto transition-all duration-200 p-3 box-content ${
               i === activeIndex ? 'bg-white scale-125' : 'bg-white/40'
             }`}
           />

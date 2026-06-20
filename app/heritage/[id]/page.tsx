@@ -14,7 +14,7 @@ export default function HeritagePage({ params }: Props) {
     <div className="min-h-screen bg-black text-white">
       {/* 상단 헤더 */}
       <div className="sticky top-0 z-10 flex items-center gap-4 px-4 py-3 bg-black/80 backdrop-blur-sm border-b border-white/10">
-        <Link href="/feed" aria-label="뒤로" className="text-white text-2xl leading-none">
+        <Link href="/explore" aria-label="뒤로" className="text-white text-2xl leading-none">
           ←
         </Link>
         <h1 className="text-base font-bold">{heritage.name}</h1>

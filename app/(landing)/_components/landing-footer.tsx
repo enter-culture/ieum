@@ -1,16 +1,13 @@
-import { Button, Card } from "@vapor-ui/core";
 import Link from "next/link";
 
 export default function LandingFooter() {
   return (
-    <Card.Root className="bg-transparent border-none">
-      <Card.Footer className="flex h-full items-center justify-center bg-[#e8e8e8]">
-        <Link href="/feed" className="w-full">
-          <Button stretch size="lg" className="bg-primary-700">
-            Go
-          </Button>
-        </Link>
-      </Card.Footer>
-    </Card.Root>
+    <div className="w-full px-6 pb-10 pt-4 bg-[#e8e8e8]">
+      <Link href="/feed" className="block w-full">
+        <button className="w-full py-4 rounded-xl bg-[#ee7f12] text-white text-base font-semibold hover:bg-[#e77011] active:scale-[0.98] transition-all duration-150">
+          Go
+        </button>
+      </Link>
+    </div>
   );
 }

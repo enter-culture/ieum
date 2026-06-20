@@ -1,9 +1,9 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import HeritageCard from '@/components/HeritageCard'
-import { heritageList } from '@/data/heritage'
+import HeritageCard from '@/widgets/shorts-swiper/ui/HeritageCard'
+import { heritageList } from '@/entities/heritage/data/heritageList'
 
-jest.mock('@/components/VideoPlayer', () => () => <div data-testid="video-player" />)
-jest.mock('@/components/ParticleEffect', () => ({ trigger }: { trigger: number }) => (
+jest.mock('@/shared/ui/VideoPlayer/VideoPlayer', () => () => <div data-testid="video-player" />)
+jest.mock('@/features/like/ui/ParticleEffect', () => ({ trigger }: { trigger: number }) => (
   <div data-testid="particle-effect" data-trigger={trigger} />
 ))
 

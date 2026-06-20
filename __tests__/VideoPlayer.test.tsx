@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import VideoPlayer from '@/components/VideoPlayer'
+import VideoPlayer from '@/shared/ui/VideoPlayer/VideoPlayer'
 
 const mockObserve = jest.fn()
 const mockDisconnect = jest.fn()

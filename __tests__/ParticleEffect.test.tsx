@@ -1,5 +1,5 @@
 import { render, act } from '@testing-library/react'
-import ParticleEffect from '@/components/ParticleEffect'
+import ParticleEffect from '@/features/like/ui/ParticleEffect'
 
 jest.useFakeTimers()
 

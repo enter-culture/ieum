@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import LikeButton from '@/components/LikeButton'
+import LikeButton from '@/features/like/ui/LikeButton'
 
 describe('LikeButton', () => {
   it('shows initial count', () => {

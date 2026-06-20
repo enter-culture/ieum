@@ -1,5 +1,5 @@
 import { IS_COMPLETED_ONBOARDING_KEY, ONBOARDING_DATA_KEY } from "@/shared/config/session-storage-key";
-import type { OnboardingSchema } from "@/app/onboarding/_schemas/onboarding_schema";
+import type { OnboardingSchema } from "@/views/onboarding/model/onboarding_schema";
 
 export const getOnboardingDataFromSessionStorage = () => {
   const filterData = sessionStorage.getItem(ONBOARDING_DATA_KEY);

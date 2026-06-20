@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react'
-import HeritageFeed from '@/components/HeritageFeed'
-import { heritageList } from '@/data/heritage'
+import HeritageFeed from '@/widgets/shorts-swiper/ui/HeritageFeed'
+import { heritageList } from '@/entities/heritage/data/heritageList'
 
-jest.mock('@/components/HeritageCard', () => ({ heritage }: { heritage: { name: string } }) => (
+jest.mock('@/widgets/shorts-swiper/ui/HeritageCard', () => ({ heritage }: { heritage: { name: string } }) => (
   <div data-testid="heritage-card">{heritage.name}</div>
 ))
 

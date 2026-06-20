@@ -1,6 +1,7 @@
 "use client";
 import Lottie from "react-lottie";
-import animationData from "@/public/lottie/landing.json";
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const animationData = require("../../../../public/lottie/landing.json");
 import LandingFooter from "@/views/landing/ui/LandingFooter";
 
 export default function LandingLottie() {

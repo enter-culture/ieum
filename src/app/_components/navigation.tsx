@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import clsx from "clsx";
 
 export default function Navigation() {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
   const router = useRouter();
 
   const setActiveColor = useMemo(() => {

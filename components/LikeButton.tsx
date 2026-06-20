@@ -4,6 +4,7 @@ import { useState } from 'react'
 interface Props {
   initialCount: number
   onLike: () => void
+  vertical?: boolean
 }
 
 function formatCount(n: number): string {
@@ -14,7 +15,7 @@ function formatCount(n: number): string {
   return String(n)
 }
 
-export default function LikeButton({ initialCount, onLike }: Props) {
+export default function LikeButton({ initialCount, onLike, vertical = false }: Props) {
   const [count, setCount] = useState(initialCount)
 
   const handleClick = () => {
@@ -25,10 +26,10 @@ export default function LikeButton({ initialCount, onLike }: Props) {
   return (
     <button
       onClick={handleClick}
-      className="flex items-center gap-1 text-white"
+      className={`flex items-center text-white ${vertical ? 'flex-col gap-1' : 'flex-row gap-1'}`}
       aria-label="좋아요"
     >
-      <span className="text-xl">🤍</span>
+      <span className={vertical ? 'text-3xl' : 'text-xl'}>🤍</span>
       <span className="text-sm font-medium">{formatCount(count)}</span>
     </button>
   )

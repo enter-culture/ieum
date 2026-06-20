@@ -1,5 +1,5 @@
-import LandingLottie from './_components/landing-lottie'
+import LandingLottie from "./_components/landing-lottie";
 
 export default function LandingPage() {
-  return <LandingLottie />
+  return <LandingLottie />;
 }

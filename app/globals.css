@@ -1,4 +1,6 @@
+@import "tw-animate-css";
 @import "tailwindcss";
+@import "@vapor-ui/core/styles.css";
 
 :root {
   --background: #ffffff;

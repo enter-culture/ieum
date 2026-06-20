@@ -1,6 +1,5 @@
-import HeritageFeed from '@/components/HeritageFeed'
-import { heritageList } from '@/data/heritage'
+import IntroScreen from '@/components/IntroScreen'
 
 export default function Home() {
-  return <HeritageFeed items={heritageList} />
+  return <IntroScreen />
 }

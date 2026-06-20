@@ -23,7 +23,7 @@ describe('HeritagePage', () => {
   it('renders 뒤로가기 link to home', () => {
     render(<HeritagePage params={{ id: heritage.id }} />)
     const link = screen.getByRole('link', { name: /뒤로/ })
-    expect(link).toHaveAttribute('href', '/')
+    expect(link).toHaveAttribute('href', '/feed')
   })
 
   it('throws notFound for unknown id', () => {

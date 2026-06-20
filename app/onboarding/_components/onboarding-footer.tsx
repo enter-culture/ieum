@@ -53,7 +53,7 @@ export default function OnboardingFooter({ step, isLastStep, onNextStep }: Onboa
         onClick={() => { if (isLastStep) { onSubmit(); } else { onNextStep(); } }}
         disabled={!isValid()}
       >
-        NEXT STEP
+        {isLastStep ? "시작하기" : "다음으로"}
       </button>
       {isLoading && <Loading />}
     </div>

@@ -23,7 +23,7 @@ export default function ShortsBookmark({ isBookmarked, onToggle }: ShortsBookmar
       >
         <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
       </svg>
-      <span className="text-white text-xs">{isBookmarked ? "Saved" : "Save"}</span>
+      <span className="text-white text-xs">{isBookmarked ? "저장됨" : "저장"}</span>
     </button>
   );
 }

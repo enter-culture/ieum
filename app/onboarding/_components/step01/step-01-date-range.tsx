@@ -29,7 +29,7 @@ export default function Step01DateRange({ onSelect, inputSelectedRange }: Step01
     <div className="flex items-center gap-[8px]">
       <button onClick={() => setIsOpen(true)}>
         <DatePickerInput
-          label="Departure Date"
+          label="출발일"
           placeholder="25.07.11"
           value={inputSelectedRange?.from ? dayjs(inputSelectedRange.from).format("YY.MM.DD") : ""}
         />
@@ -41,7 +41,7 @@ export default function Step01DateRange({ onSelect, inputSelectedRange }: Step01
 
       <button onClick={() => setIsOpen(true)}>
         <DatePickerInput
-          label="Arrival Date"
+          label="도착일"
           placeholder="25.07.18"
           value={inputSelectedRange?.to ? dayjs(inputSelectedRange.to).format("YY.MM.DD") : ""}
         />
@@ -54,7 +54,7 @@ export default function Step01DateRange({ onSelect, inputSelectedRange }: Step01
             onClick={() => setIsOpen(false)}
           />
           <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white rounded-2xl p-5 w-[calc(100%-32px)] max-w-[360px] shadow-xl">
-            <h3 className="text-center font-bold text-lg mb-4">날짜 선택</h3>
+            <h3 className="text-center font-bold text-lg mb-4">방문 날짜 선택</h3>
             <Calendar
               mode="range"
               className="rounded-lg border mx-auto"
@@ -63,10 +63,10 @@ export default function Step01DateRange({ onSelect, inputSelectedRange }: Step01
             />
             <div className="flex justify-end gap-2 mt-4">
               <Button variant="ghost" size="lg" onClick={() => setIsOpen(false)}>
-                Cancel
+                취소
               </Button>
               <Button size="lg" className="bg-[#ee7f12] text-white" onClick={onClickOk}>
-                Ok
+                확인
               </Button>
             </div>
           </div>

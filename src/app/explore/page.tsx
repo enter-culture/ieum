@@ -1,2 +1,2 @@
-import ShortsSwiper from "./_components/shorts-swiper";
-export default function VideoPage() { return <ShortsSwiper />; }
+import { ExplorePage } from '@/views/explore'
+export default ExplorePage

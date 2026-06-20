@@ -1,7 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { SWRProvider } from "./_providers/swr-provider";
-import Navigation from "@/app/_components/navigation";
+import { SWRProvider } from "@/shared/lib/swr-provider";
+import Navigation from "@/widgets/navigation/ui/Navigation";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {

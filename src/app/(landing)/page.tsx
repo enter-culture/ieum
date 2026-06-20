@@ -1,5 +1,2 @@
-import LandingLottie from "./_components/landing-lottie";
-
-export default function LandingPage() {
-  return <LandingLottie />;
-}
+import { LandingPage } from '@/views/landing'
+export default LandingPage

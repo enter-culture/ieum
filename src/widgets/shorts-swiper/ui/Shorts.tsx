@@ -5,8 +5,22 @@ import MuteToggleIcon from "@/shared/ui/MuteToggleIcon/MuteToggleIcon";
 import ShortsInfoSection from "@/widgets/shorts-swiper/ui/ShortsInfoSection";
 import { ShortsPlace } from "@/shared/api/explore";
 
-interface FloatingHeart { id: number; x: number; }
+interface FloatingHeart {
+  id: number;
+  x: number;
+  size: number;
+  rotate: number;
+  duration: number;
+  delay: number;
+}
+
 interface ShortsProps { item: ShortsPlace & { videoSrc: string }; page: number; currentPage: number; }
+
+const HeartSVG = ({ size, fill, stroke }: { size: number; fill: string; stroke?: string }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={stroke ?? "none"} strokeWidth={stroke ? 1.5 : 0}>
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+  </svg>
+);
 
 export default function Shorts({ item, page, currentPage }: ShortsProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -18,6 +32,7 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(item.averageRating ? parseInt(item.averageRating) : 0);
   const [floatingHearts, setFloatingHearts] = useState<FloatingHeart[]>([]);
+  const [popKey, setPopKey] = useState(0);
   const heartIdRef = useRef(0);
 
   const handleToggleMute = () => {
@@ -33,41 +48,40 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
   };
 
   const handleLike = () => {
-    setLiked((prev) => !prev);
-    setLikeCount((prev) => liked ? prev - 1 : prev + 1);
+    const isNowLiked = !liked;
+    setLiked(isNowLiked);
+    setLikeCount((prev) => isNowLiked ? prev + 1 : prev - 1);
+    setPopKey((k) => k + 1);
 
-    // 하트 3개 살짝 다른 위치에서 동시에 올라옴
-    const newHearts: FloatingHeart[] = Array.from({ length: 3 }, (_, i) => ({
+    if (!isNowLiked) return;
+
+    // 6개 하트, 각자 다른 방향·크기·속도로 퍼짐
+    const offsets = [-28, -16, -6, 6, 16, 28];
+    const newHearts: FloatingHeart[] = offsets.map((x, i) => ({
       id: heartIdRef.current++,
-      x: -10 + i * 10,
+      x,
+      size: 10 + (i % 3) * 5,
+      rotate: -20 + i * 8,
+      duration: 700 + i * 80,
+      delay: i * 40,
     }));
     setFloatingHearts((prev) => [...prev, ...newHearts]);
     setTimeout(() => {
       setFloatingHearts((prev) =>
         prev.filter((h) => !newHearts.find((n) => n.id === h.id))
       );
-    }, 900);
+    }, 1400);
   };
 
   const onLongPressVideo = useLongPress(
-    () => {
-      setIsLongPressing(true);
-      setIsPaused(true);
-      videoRef.current?.pause();
-    },
+    () => { setIsLongPressing(true); setIsPaused(true); videoRef.current?.pause(); },
     {
       onFinish: () => {
-        if (isPaused) {
-          if (page === currentPage) videoRef.current?.play();
-          setIsPaused(false);
-        }
+        if (isPaused) { if (page === currentPage) videoRef.current?.play(); setIsPaused(false); }
         setTimeout(() => setIsLongPressing(false), 50);
       },
       onCancel: () => {
-        if (isPaused) {
-          if (page === currentPage) videoRef.current?.play();
-          setIsPaused(false);
-        }
+        if (isPaused) { if (page === currentPage) videoRef.current?.play(); setIsPaused(false); }
         setIsLongPressing(false);
       },
       threshold: 500,
@@ -75,12 +89,6 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
       cancelOnMovement: 10,
     }
   );
-
-  const onClickVideo = () => {
-    if (isLongPressing) return;
-    handleToggleMute();
-    handleShowVolumeIcon();
-  };
 
   useEffect(() => {
     const video = videoRef.current;
@@ -111,15 +119,17 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
   return (
     <>
       <style>{`
-        @keyframes heart-float {
-          0%   { transform: translateY(0) scale(1); opacity: 1; }
-          70%  { transform: translateY(-90px) scale(1.2); opacity: 0.8; }
-          100% { transform: translateY(-140px) scale(0.6); opacity: 0; }
+        @keyframes heart-burst {
+          0%   { transform: translateY(0px)   translateX(0px) rotate(0deg)   scale(0.3); opacity: 0.9; }
+          30%  { opacity: 1; }
+          100% { transform: translateY(-120px) translateX(var(--hx)) rotate(var(--hr)) scale(0);   opacity: 0; }
         }
-        @keyframes heart-pop {
+        @keyframes heart-spring {
           0%   { transform: scale(1); }
-          30%  { transform: scale(1.45); }
-          60%  { transform: scale(0.88); }
+          15%  { transform: scale(0.75); }
+          40%  { transform: scale(1.4); }
+          65%  { transform: scale(0.92); }
+          80%  { transform: scale(1.1); }
           100% { transform: scale(1); }
         }
       `}</style>
@@ -136,44 +146,52 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
           />
           <div
             className="absolute inset-0 z-10 bg-transparent cursor-grab"
-            onClick={onClickVideo}
+            onClick={() => { if (!isLongPressing) { handleToggleMute(); handleShowVolumeIcon(); } }}
             {...onLongPressVideo()}
           />
           <div className="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
             <MuteToggleIcon showVolumeIcon={showVolumeIcon} isMuted={isMuted} />
           </div>
 
-          {/* 오른쪽 사이드 하트 버튼 */}
+          {/* 오른쪽 하트 버튼 */}
           <div className="absolute right-4 bottom-28 z-20 flex flex-col items-center gap-1.5">
-            {/* 떠오르는 하트들 */}
+
+            {/* 퍼지는 하트 파티클 */}
             {floatingHearts.map((h) => (
               <div
                 key={h.id}
                 style={{
                   position: "absolute",
-                  bottom: 40,
-                  left: `calc(50% + ${h.x}px)`,
-                  transform: "translateX(-50%)",
-                  animation: "heart-float 0.9s ease-out forwards",
+                  bottom: 20,
+                  left: "50%",
+                  marginLeft: -h.size / 2,
                   pointerEvents: "none",
+                  // CSS 커스텀 변수로 각 하트의 방향·회전 전달
+                  ["--hx" as string]: `${h.x}px`,
+                  ["--hr" as string]: `${h.rotate}deg`,
+                  animation: `heart-burst ${h.duration}ms cubic-bezier(.25,.46,.45,.94) ${h.delay}ms forwards`,
                 }}
               >
-                <svg width="22" height="20" viewBox="0 0 24 22" fill="#ff2d55">
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                </svg>
+                <HeartSVG size={h.size} fill="#ff2d55" />
               </div>
             ))}
 
-            {/* 하트 버튼 */}
+            {/* 메인 하트 버튼 */}
             <button
               onClick={(e) => { e.stopPropagation(); handleLike(); }}
               className="flex flex-col items-center gap-1"
-              style={{ animation: liked ? "heart-pop 0.35s ease forwards" : "none" }}
             >
-              <svg width="32" height="32" viewBox="0 0 24 22" fill={liked ? "#ff2d55" : "none"} stroke="white" strokeWidth="1.5" style={{ filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.6))" }}>
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-              </svg>
-              <span className="text-white text-xs font-semibold drop-shadow-md">
+              <div
+                key={popKey}
+                style={{ animation: liked ? "heart-spring 0.5s cubic-bezier(.36,.07,.19,.97) forwards" : "none" }}
+              >
+                <HeartSVG
+                  size={36}
+                  fill={liked ? "#ff2d55" : "none"}
+                  stroke="white"
+                />
+              </div>
+              <span className="text-white text-xs font-semibold" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.7)" }}>
                 {likeCount.toLocaleString()}
               </span>
             </button>
@@ -185,10 +203,7 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
             <ShortsInfoSection item={item} />
           </div>
           <div className="h-[3px] w-full bg-white/20">
-            <div
-              className="h-full bg-[#FF0000] transition-none"
-              style={{ width: `${progress * 100}%` }}
-            />
+            <div className="h-full bg-[#FF0000] transition-none" style={{ width: `${progress * 100}%` }} />
           </div>
         </div>
       </div>

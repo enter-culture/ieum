@@ -134,10 +134,11 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
         <div className="w-full aspect-[9/16] relative max-w-sm mx-auto max-h-dvh">
           <video
             ref={videoRef}
-            src={item.videoSrc || item.shortsUrl}
+            src={page >= currentPage - 1 && page <= currentPage + 1 ? (item.videoSrc || item.shortsUrl) : undefined}
             className="w-full h-full rounded-lg object-cover"
             loop
             playsInline
+            preload="none"
             autoPlay={page === 0}
           />
           <div

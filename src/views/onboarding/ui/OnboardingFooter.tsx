@@ -7,7 +7,7 @@ import { useState } from "react";
 import Loading from "@/shared/ui/Loading/Loading";
 
 interface OnboardingFooterProps {
-  step: "1" | "2" | "3";
+  step: "1" | "2";
   isLastStep: boolean;
   onNextStep: () => void;
 }
@@ -20,12 +20,9 @@ export default function OnboardingFooter({ step, isLastStep, onNextStep }: Onboa
   const isValid = () => {
     const values = watch();
     if (step === "1") {
-      return !!values.departure_date && !!values.arrival_date;
-    }
-    if (step === "2") {
       return Array.isArray(values.placeCategoryList) && values.placeCategoryList.length > 0;
     }
-    if (step === "3") {
+    if (step === "2") {
       return Array.isArray(values.vibeList) && values.vibeList.length > 0;
     }
     return true;

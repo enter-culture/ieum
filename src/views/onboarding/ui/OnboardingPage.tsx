@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { onboardingSchema, OnboardingSchema, defaultValues } from "@/views/onboarding/model/onboarding_schema";
 import OnboardingHeader from "@/views/onboarding/ui/OnboardingHeader";
 import OnboardingFooter from "@/views/onboarding/ui/OnboardingFooter";
-import Step01 from "@/views/onboarding/ui/Step01";
 import Step02 from "@/views/onboarding/ui/Step02";
 import Step03 from "@/views/onboarding/ui/Step03";
 import useStep from "@/views/onboarding/model/useStep";
@@ -19,20 +18,21 @@ function OnboardingContent() {
 
   const renderStep = () => {
     switch (step) {
-      case "1": return <Step01 />;
-      case "2": return <Step02 />;
-      case "3": return <Step03 />;
+      case "1": return <Step02 />;
+      case "2": return <Step03 />;
       default: return null;
     }
   };
 
+  const isDark = step === "1";
+
   return (
     <FormProvider {...form}>
-      <div className="relative h-full">
-        <OnboardingHeader step={step} totalSteps={totalSteps} isFirstStep={isFirstStep} onPrevStep={prevStep} />
+      <div className={`relative h-full ${isDark ? "bg-[#07060e]" : "bg-white"}`}>
+        <OnboardingHeader step={step} totalSteps={totalSteps} isFirstStep={isFirstStep} onPrevStep={prevStep} dark={isDark} />
         {renderStep()}
         <div className="absolute bottom-0 w-full">
-          <OnboardingFooter step={step as "1"|"2"|"3"} isLastStep={isLastStep} onNextStep={nextStep} />
+          <OnboardingFooter step={step as "1"|"2"} isLastStep={isLastStep} onNextStep={nextStep} />
         </div>
       </div>
     </FormProvider>

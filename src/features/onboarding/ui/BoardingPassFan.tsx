@@ -15,17 +15,17 @@ interface BoardingPassFanProps {
   onSelect: (value: number | string) => void;
 }
 
-const CARD_W = 130;
+const CARD_W = 175;
 
 // diff 기준 좌우 대칭 슬롯
 function getSlot(diff: number) {
   const abs = Math.abs(diff);
   const sign = diff >= 0 ? 1 : -1;
-  if (abs === 0) return { tx: 0,          ty: -20, scale: 1,    rot: 0,         z: 8, opacity: 1   };
-  if (abs === 1) return { tx: sign * 68,  ty: 0,   scale: 0.84, rot: sign * 10, z: 6, opacity: 0.9 };
-  if (abs === 2) return { tx: sign * 120, ty: 0,   scale: 0.68, rot: sign * 20, z: 4, opacity: 0.6 };
-  if (abs === 3) return { tx: sign * 160, ty: 0,   scale: 0.52, rot: sign * 30, z: 2, opacity: 0.3 };
-  return                 { tx: sign * 200, ty: 0,  scale: 0.3,  rot: sign * 40, z: 0, opacity: 0   };
+  if (abs === 0) return { tx: 0,           ty: -24, scale: 1,    rot: 0,         z: 8, opacity: 1   };
+  if (abs === 1) return { tx: sign * 95,   ty: 0,   scale: 0.82, rot: sign * 12, z: 6, opacity: 0.85 };
+  if (abs === 2) return { tx: sign * 155,  ty: 0,   scale: 0.65, rot: sign * 24, z: 4, opacity: 0.5 };
+  if (abs === 3) return { tx: sign * 200,  ty: 0,   scale: 0.48, rot: sign * 36, z: 2, opacity: 0.25 };
+  return                 { tx: sign * 240, ty: 0,   scale: 0.3,  rot: sign * 45, z: 0, opacity: 0   };
 }
 
 export default function BoardingPassFan({ options, selectedValues, onSelect }: BoardingPassFanProps) {
@@ -99,7 +99,7 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
             justifyContent: "center",
             alignItems: "center",
             width: "100%",
-            height: "280px",
+            height: "360px",
             position: "relative",
             overflow: "hidden",
           }}
@@ -185,15 +185,15 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
                         padding: "5px 8px",
                         display: "flex", flexDirection: "column", gap: 2,
                       }}>
-                        <span style={{ fontSize: "8px", fontWeight: 700, color: "#ee7f12", letterSpacing: "0.1em" }}>이음 AIR ✈</span>
-                        <span style={{ fontSize: "7px", color: "#999" }}>GATE: {option.label}</span>
+                        <span style={{ fontSize: "10px", fontWeight: 700, color: "#ee7f12", letterSpacing: "0.1em" }}>이음 AIR ✈</span>
+                        <span style={{ fontSize: "9px", color: "#999" }}>GATE: {option.label}</span>
                       </div>
 
                       {/* 퍼포레이션 */}
                       <div style={{ borderTop: "1px dashed #e0e0e0", margin: "0 8px" }} />
 
                       {/* 이미지 영역 */}
-                      <div style={{ position: "relative", height: "140px", overflow: "hidden" }}>
+                      <div style={{ position: "relative", height: "195px", overflow: "hidden" }}>
                         {option.imageSrc ? (
                           <Image
                             src={option.imageSrc}

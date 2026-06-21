@@ -17,21 +17,15 @@ interface BoardingPassFanProps {
 
 const CARD_W = 130;
 
-const RIGHT_SLOTS = [
-  { tx: 0,   ty: -20, scale: 1,    rot: 0,  z: 7, opacity: 1   },
-  { tx: 52,  ty: 0,   scale: 0.88, rot: 8,  z: 6, opacity: 1   },
-  { tx: 104, ty: 0,   scale: 0.76, rot: 16, z: 5, opacity: 1   },
-  { tx: 156, ty: 0,   scale: 0.64, rot: 24, z: 4, opacity: 0.4 },
-  { tx: 208, ty: 0,   scale: 0.52, rot: 32, z: 3, opacity: 0.4 },
-  { tx: 260, ty: 0,   scale: 0.40, rot: 40, z: 2, opacity: 0.4 },
-  { tx: 312, ty: 0,   scale: 0.28, rot: 48, z: 1, opacity: 0.4 },
-];
-const LEFT_EXIT = { tx: -200, ty: 20, scale: 0.5, rot: -20, z: 0, opacity: 0 };
-
+// diff 기준 좌우 대칭 슬롯
 function getSlot(diff: number) {
-  if (diff >= 0 && diff < RIGHT_SLOTS.length) return RIGHT_SLOTS[diff];
-  if (diff === -1) return LEFT_EXIT;
-  return { ...LEFT_EXIT, tx: -300, opacity: 0, z: 0 };
+  const abs = Math.abs(diff);
+  const sign = diff >= 0 ? 1 : -1;
+  if (abs === 0) return { tx: 0,          ty: -20, scale: 1,    rot: 0,         z: 8, opacity: 1   };
+  if (abs === 1) return { tx: sign * 68,  ty: 0,   scale: 0.84, rot: sign * 10, z: 6, opacity: 0.9 };
+  if (abs === 2) return { tx: sign * 120, ty: 0,   scale: 0.68, rot: sign * 20, z: 4, opacity: 0.6 };
+  if (abs === 3) return { tx: sign * 160, ty: 0,   scale: 0.52, rot: sign * 30, z: 2, opacity: 0.3 };
+  return                 { tx: sign * 200, ty: 0,  scale: 0.3,  rot: sign * 40, z: 0, opacity: 0   };
 }
 
 export default function BoardingPassFan({ options, selectedValues, onSelect }: BoardingPassFanProps) {
@@ -122,7 +116,7 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
             .map(({ option, cardIdx, diff, slot }) => {
               const isActive = diff === 0;
               const isFlipped = flipped[cardIdx];
-              const isVisible = diff >= -1 && diff < RIGHT_SLOTS.length;
+              const isVisible = Math.abs(diff) <= 3;
               const isSelected = selectedValues.includes(option.value);
 
               const stackTy = Math.max(0, diff) * 2;
@@ -135,7 +129,7 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
                   onClick={() => {
                     if (!fanned) return;
                     if (isActive) onSelect(option.value);
-                    else if (diff > 0) setPivot(cardIdx);
+                    else setPivot(cardIdx);
                   }}
                   style={{
                     position: "absolute",

@@ -115,7 +115,7 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
     <>
       <style>{`
         @keyframes heart-burst {
-          0%   { transform: translateY(0px)    translateX(0px) rotate(0deg)   scale(0.4); opacity: 1; }
+          0%   { transform: translateY(0px)    translateX(0px) rotate(0deg)   scale(0.5); opacity: 1; }
           30%  { opacity: 1; }
           100% { transform: translateY(-200px) translateX(var(--hx)) rotate(var(--hr)) scale(0.2); opacity: 0; }
         }
@@ -125,6 +125,52 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
           50%  { transform: scale(1.15); }
           75%  { transform: scale(0.95); }
           100% { transform: scale(1); }
+        }
+        .heart-css {
+          position: relative;
+          display: inline-block;
+          transform: rotate(-45deg);
+        }
+        .heart-css::before,
+        .heart-css::after {
+          content: '';
+          position: absolute;
+          border-radius: 50% 50% 0 0;
+          background: var(--hc, white);
+        }
+        .heart-css::before {
+          width: 100%; height: 100%;
+          top: -50%; left: 0;
+        }
+        .heart-css::after {
+          width: 100%; height: 100%;
+          top: 0; left: 50%;
+        }
+        .heart-css-outline {
+          position: relative;
+          display: inline-block;
+          transform: rotate(-45deg);
+        }
+        .heart-css-outline::before,
+        .heart-css-outline::after {
+          content: '';
+          position: absolute;
+          border-radius: 50% 50% 0 0;
+          background: transparent;
+          border: 2px solid white;
+          box-sizing: border-box;
+        }
+        .heart-css-outline::before {
+          width: 100%; height: 100%;
+          top: -50%; left: 0;
+          border-bottom: none;
+          border-right: none;
+        }
+        .heart-css-outline::after {
+          width: 100%; height: 100%;
+          top: 0; left: 50%;
+          border-bottom: none;
+          border-left: none;
         }
       `}</style>
 
@@ -154,22 +200,21 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
           {floatingHearts.map((h) => (
             <div
               key={h.id}
+              className="heart-css"
               style={{
                 position: "absolute",
                 bottom: 20,
                 left: "50%",
                 marginLeft: -h.size / 2,
                 pointerEvents: "none",
+                width: h.size,
+                height: h.size,
                 ["--hx" as string]: `${h.x}px`,
                 ["--hr" as string]: `${h.rotate}deg`,
+                ["--hc" as string]: "#ff2d55",
                 animation: `heart-burst ${h.duration}ms cubic-bezier(.25,.46,.45,.94) ${h.delay}ms forwards`,
-                fontSize: h.size,
-                color: "#ff2d55",
-                lineHeight: 1,
               }}
-            >
-              ♥
-            </div>
+            />
           ))}
 
           <button
@@ -178,17 +223,14 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
           >
             <div
               key={popKey}
+              className={liked ? "heart-css" : "heart-css-outline"}
               style={{
-                fontSize: 36,
-                lineHeight: 1,
-                color: liked ? "#ff2d55" : "transparent",
-                WebkitTextStroke: liked ? "0px" : "1.5px white",
-                textShadow: "0 1px 4px rgba(0,0,0,0.5)",
+                width: 36,
+                height: 36,
+                ["--hc" as string]: "#ff2d55",
                 animation: liked ? "heart-spring 0.45s cubic-bezier(.36,.07,.19,.97) forwards" : "none",
               }}
-            >
-              ♥
-            </div>
+            />
             <span className="text-white text-xs font-semibold" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.7)" }}>
               {likeCount.toLocaleString()}
             </span>

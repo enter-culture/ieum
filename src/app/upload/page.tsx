@@ -2,6 +2,7 @@
 import { useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { apiUrl } from "@/shared/api/base";
+import { createVideo } from "@/shared/api/videos";
 
 interface HeritageItem {
   asno: string;
@@ -138,6 +139,18 @@ export default function UploadPage() {
         xhr.open("PUT", presignedUrl);
         xhr.setRequestHeader("Content-Type", videoFile.type);
         xhr.send(videoFile);
+      });
+
+      // 백엔드에 비디오 등록 (목록/피드에 노출)
+      await createVideo({
+        r2Key: key,
+        title: form.title,
+        description: form.description || undefined,
+        category: form.category || undefined,
+        subCategory: form.subCategory || undefined,
+        region: form.region || undefined,
+        heritageAsno: form.heritageAsno || undefined,
+        heritageCtcd: form.heritageCtcd || undefined,
       });
 
       const publicUrl = `${process.env.NEXT_PUBLIC_R2_PUBLIC_URL ?? ""}/${key}`;

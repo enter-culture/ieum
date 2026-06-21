@@ -4,6 +4,7 @@ import { useLongPress } from "use-long-press";
 import MuteToggleIcon from "@/shared/ui/MuteToggleIcon/MuteToggleIcon";
 import ShortsInfoSection from "@/widgets/shorts-swiper/ui/ShortsInfoSection";
 import { ShortsPlace } from "@/shared/api/explore";
+import CommentDrawer from "@/widgets/shorts-swiper/ui/CommentDrawer";
 
 interface FloatingHeart {
   id: number;
@@ -28,6 +29,7 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
   const [likeCount, setLikeCount] = useState(item.averageRating ? parseInt(item.averageRating) : 0);
   const [floatingHearts, setFloatingHearts] = useState<FloatingHeart[]>([]);
   const [popKey, setPopKey] = useState(0);
+  const [commentOpen, setCommentOpen] = useState(false);
   const heartIdRef = useRef(0);
 
   const handleToggleMute = () => {
@@ -184,7 +186,26 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
               {likeCount.toLocaleString()}
             </span>
           </button>
+
+          {/* 댓글 버튼 */}
+          <button
+            onClick={(e) => { e.stopPropagation(); setCommentOpen(true); }}
+            className="flex flex-col items-center gap-1 mt-2"
+          >
+            <svg width={36} height={36} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            <span className="text-white text-xs font-semibold" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.7)" }}>
+              댓글
+            </span>
+          </button>
         </div>
+
+        <CommentDrawer
+          open={commentOpen}
+          onClose={() => setCommentOpen(false)}
+          videoTitle={item.title}
+        />
 
         <div className="absolute bottom-0 left-0 right-0 z-30">
           <div className="p-4">

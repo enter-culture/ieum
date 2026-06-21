@@ -66,14 +66,14 @@ export default function Navigation() {
         paddingBottom: "env(safe-area-inset-bottom)",
       }}
     >
-      <div className="flex items-center justify-around h-16 px-2">
+      <div className="flex items-center h-16">
         {NAV_ITEMS.map((item) => {
           const active = pathname === item.path || (item.path !== "/upload" && pathname.startsWith(item.path));
           const color = isExplore ? "white" : active ? "#ee7f12" : "#9ca3af";
 
           if (item.isCenter) {
             return (
-              <button key={item.path} onClick={() => router.push(item.path)} className="flex items-center justify-center">
+              <button key={item.path} onClick={() => router.push(item.path)} className="flex-1 flex items-center justify-center">
                 {item.icon(false)}
               </button>
             );

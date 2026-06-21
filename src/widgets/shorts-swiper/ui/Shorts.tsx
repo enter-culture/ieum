@@ -240,7 +240,7 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
           videoTitle={item.title}
         />
 
-        <div className="absolute bottom-0 left-0 right-0 z-30">
+        <div className="absolute bottom-16 left-0 right-0 z-30">
           <div className="p-4">
             <ShortsInfoSection item={item} />
           </div>

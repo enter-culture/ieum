@@ -12,6 +12,16 @@ const NAV_ITEMS = [
     ),
   },
   {
+    path: "/destinations",
+    label: "여행지",
+    icon: (active: boolean) => (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill={active ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+        <circle cx="12" cy="10" r="3" fill={active ? "white" : "currentColor"}/>
+      </svg>
+    ),
+  },
+  {
     path: "/upload",
     label: "",
     isCenter: true,
@@ -22,16 +32,6 @@ const NAV_ITEMS = [
           <line x1="5" y1="12" x2="19" y2="12"/>
         </svg>
       </div>
-    ),
-  },
-  {
-    path: "/destinations",
-    label: "여행지",
-    icon: (active: boolean) => (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill={active ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-        <circle cx="12" cy="10" r="3" fill={active ? "white" : "currentColor"}/>
-      </svg>
     ),
   },
   {

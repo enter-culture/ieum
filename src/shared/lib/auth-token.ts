@@ -33,12 +33,17 @@ export function clearToken(): void {
 export function decodeUser(token: string | null): AuthUser | null {
   if (!token) return null;
   try {
-    const payload = token.split(".")[1];
-    const json = JSON.parse(
-      atob(payload.replace(/-/g, "+").replace(/_/g, "/")),
-    ) as AuthUser;
-    if (json.exp && json.exp * 1000 < Date.now()) return null;
-    return json;
+    const part = token.split(".")[1];
+    if (!part) return null;
+    // base64url → base64 + 패딩 보정 (atob은 길이%4==1이면 throw)
+    let base64 = part.replace(/-/g, "+").replace(/_/g, "/");
+    base64 += "=".repeat((4 - (base64.length % 4)) % 4);
+    // atob은 Latin1만 다루므로 UTF-8로 다시 디코딩해야 한글 이름이 안 깨진다
+    const bytes = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
+    const json = new TextDecoder().decode(bytes);
+    const payload = JSON.parse(json) as AuthUser;
+    if (payload.exp && payload.exp * 1000 < Date.now()) return null;
+    return payload;
   } catch {
     return null;
   }

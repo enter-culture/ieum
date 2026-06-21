@@ -1,6 +1,6 @@
 "use client";
 import { Suspense, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/shared/lib/auth-store";
 import { getMyOnboarding, saveMyOnboarding } from "@/shared/api/onboarding";
 import {
@@ -16,11 +16,11 @@ function hasSurvey(v?: { vibeList?: number[]; placeCategoryList?: number[] } | n
 
 function AuthCallback() {
   const router = useRouter();
-  const params = useSearchParams();
   const { applyToken } = useAuth();
 
   useEffect(() => {
-    const token = params.get("token");
+    // useSearchParams 타이밍에 의존하지 않도록 주소창에서 직접 읽는다.
+    const token = new URLSearchParams(window.location.search).get("token");
     if (!token) {
       router.replace("/?error=login");
       return;

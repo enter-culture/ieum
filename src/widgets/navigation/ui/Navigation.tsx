@@ -15,7 +15,7 @@ const NAV_ITEMS = [
     path: "/upload",
     label: "",
     isCenter: true,
-    icon: () => (
+    icon: (_active: boolean) => (
       <div className="w-12 h-12 rounded-2xl bg-[#ee7f12] flex items-center justify-center shadow-lg" style={{ boxShadow: "0 4px 14px rgba(238,127,18,0.4)" }}>
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
           <line x1="12" y1="5" x2="12" y2="19"/>

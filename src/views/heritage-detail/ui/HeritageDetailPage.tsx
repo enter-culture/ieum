@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { apiUrl } from "@/shared/api/base";
 
 interface HeritageDetail {
   name: string;
@@ -22,7 +23,7 @@ export default function HeritageDetailPage({ id }: { id: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetch(`/api/heritage/${id}`)
+    fetch(apiUrl(`/heritage/${id}`))
       .then((r) => r.json())
       .then((d) => { setData(d); setLoading(false); })
       .catch(() => setLoading(false));

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { apiUrl } from "@/shared/api/base";
 
 interface Destination {
   id: string;
@@ -38,7 +39,7 @@ export default function DestinationsPage() {
   const fetchDestinations = useCallback(async (lat: number, lng: number, type: string) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/destinations?lat=${lat}&lng=${lng}&radius=5000&type=${type}`);
+      const res = await fetch(apiUrl(`/destinations?lat=${lat}&lng=${lng}&radius=5000&type=${type}`));
       const data = await res.json();
       if (Array.isArray(data)) setDestinations(data);
     } catch {

@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { apiUrl } from "@/shared/api/base";
 
 interface HeritageItem {
   asno: string;
@@ -60,7 +61,7 @@ export default function UploadPage() {
     setSearching(true);
     setSearchResults([]);
     try {
-      const res = await fetch(`/api/heritage/search?q=${encodeURIComponent(query)}`);
+      const res = await fetch(apiUrl(`/heritage/search?q=${encodeURIComponent(query)}`));
       const data = await res.json();
       setSearchResults(data);
     } finally {
@@ -74,7 +75,7 @@ export default function UploadPage() {
     setSearchResults([]);
     setLoadingDetail(true);
     try {
-      const res = await fetch(`/api/heritage/detail?asno=${item.asno}&ctcd=${item.ctcd}&kdcd=${item.kdcd}`);
+      const res = await fetch(apiUrl(`/heritage/detail?asno=${item.asno}&ctcd=${item.ctcd}&kdcd=${item.kdcd}`));
       const detail = await res.json();
       setForm((prev) => ({
         ...prev,
@@ -118,7 +119,7 @@ export default function UploadPage() {
 
     try {
       // 1. Presigned URL 발급
-      const presignRes = await fetch("/api/upload/presign", {
+      const presignRes = await fetch(apiUrl("/upload/presign"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ filename: videoFile.name, contentType: videoFile.type }),

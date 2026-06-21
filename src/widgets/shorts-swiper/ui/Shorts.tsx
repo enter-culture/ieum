@@ -56,14 +56,14 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
     if (!isNowLiked) return;
 
     // 6개 하트, 각자 다른 방향·크기·속도로 퍼짐
-    const offsets = [-28, -16, -6, 6, 16, 28];
+    const offsets = [-36, -20, -8, 8, 20, 36];
     const newHearts: FloatingHeart[] = offsets.map((x, i) => ({
       id: heartIdRef.current++,
       x,
-      size: 10 + (i % 3) * 5,
-      rotate: -20 + i * 8,
-      duration: 700 + i * 80,
-      delay: i * 40,
+      size: 28 + (i % 3) * 10,
+      rotate: -25 + i * 10,
+      duration: 800 + i * 90,
+      delay: i * 50,
     }));
     setFloatingHearts((prev) => [...prev, ...newHearts]);
     setTimeout(() => {

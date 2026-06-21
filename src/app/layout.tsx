@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { SWRProvider } from "@/shared/lib/swr-provider";
 import Navigation from "@/widgets/navigation/ui/Navigation";
+import { LikesProvider } from "@/shared/lib/likes-store";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
@@ -18,10 +19,12 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       <body className="relative bg-white">
         <Suspense fallback={null}>
           <SWRProvider>
-            <main className="bg-white w-full h-dvh overflow-y-auto">
-              {children}
-            </main>
-            <Navigation />
+            <LikesProvider>
+              <main className="bg-white w-full h-dvh overflow-y-auto">
+                {children}
+              </main>
+              <Navigation />
+            </LikesProvider>
           </SWRProvider>
         </Suspense>
       </body>

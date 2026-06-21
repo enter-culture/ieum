@@ -5,6 +5,7 @@ import MuteToggleIcon from "@/shared/ui/MuteToggleIcon/MuteToggleIcon";
 import ShortsInfoSection from "@/widgets/shorts-swiper/ui/ShortsInfoSection";
 import { ShortsPlace } from "@/shared/api/explore";
 import CommentDrawer from "@/widgets/shorts-swiper/ui/CommentDrawer";
+import { useLikes } from "@/shared/lib/likes-store";
 
 interface FloatingHeart {
   id: number;
@@ -25,7 +26,8 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
   const [isLongPressing, setIsLongPressing] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [liked, setLiked] = useState(false);
+  const { isLiked, toggleLike } = useLikes();
+  const liked = isLiked(item.id);
   const [likeCount, setLikeCount] = useState(item.averageRating ? parseInt(item.averageRating) : 0);
   const [floatingHearts, setFloatingHearts] = useState<FloatingHeart[]>([]);
   const [popKey, setPopKey] = useState(0);
@@ -46,7 +48,15 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
 
   const handleLike = () => {
     const isNowLiked = !liked;
-    setLiked(isNowLiked);
+    toggleLike({
+      id: item.id,
+      title: item.title,
+      address: item.address,
+      categoryHigh: item.categoryHigh,
+      videoSrc: item.videoSrc || item.shortsUrl,
+      heritageId: item.heritageId,
+      likedAt: Date.now(),
+    });
     setLikeCount((prev) => isNowLiked ? prev + 1 : prev - 1);
     setPopKey((k) => k + 1);
 

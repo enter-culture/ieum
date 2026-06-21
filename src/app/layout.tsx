@@ -17,7 +17,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       <body className="relative bg-black">
         <Suspense fallback={null}>
           <SWRProvider>
-            <main className="bg-black w-full h-dvh">
+            <main className="bg-black w-full min-h-dvh">
               {children}
             </main>
           </SWRProvider>

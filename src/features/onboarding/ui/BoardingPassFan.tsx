@@ -200,8 +200,20 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
                           {option.label}
                         </span>
                         {isSelected && (
-                          <div style={{ position: "absolute", top: 8, right: 8, background: "#ee7f12", color: "white", borderRadius: "999px", padding: "3px 8px", fontSize: "10px", fontWeight: 700 }}>
-                            ✓
+                          <div style={{
+                            position: "absolute", inset: 0,
+                            background: "rgba(238,127,18,0.18)",
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            pointerEvents: "none",
+                          }}>
+                            <div style={{
+                              width: 52, height: 52,
+                              borderRadius: "999px",
+                              background: "#ee7f12",
+                              display: "flex", alignItems: "center", justifyContent: "center",
+                              fontSize: "1.5rem", color: "white", fontWeight: 900,
+                              boxShadow: "0 4px 16px rgba(238,127,18,0.5)",
+                            }}>✓</div>
                           </div>
                         )}
                         {isActive && fanned && (
@@ -225,40 +237,17 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
             })}
         </div>
 
-        {/* 카드명 + 선택 버튼 */}
+        {/* 카드명 */}
         <div style={{
-          width: "100%",
-          padding: "0 24px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 10,
+          textAlign: "center",
           opacity: uiReady ? 1 : 0,
           transform: uiReady ? "translateY(0)" : "translateY(8px)",
           transition: "opacity 0.35s ease, transform 0.35s ease",
         }}>
           <p style={{ fontSize: "1rem", color: "#333", fontWeight: 700 }}>
             {activeOption?.label}
+            {isActiveSelected && <span style={{ marginLeft: 8, color: "#ee7f12" }}>✓</span>}
           </p>
-          <button
-            type="button"
-            onClick={() => activeOption && onSelect(activeOption.value)}
-            style={{
-              width: "100%",
-              padding: "14px 0",
-              borderRadius: "9999px",
-              fontSize: "1rem",
-              fontWeight: 700,
-              cursor: "pointer",
-              transition: "all 0.2s",
-              background: isActiveSelected ? "transparent" : "#ee7f12",
-              color: isActiveSelected ? "#ee7f12" : "#fff",
-              border: isActiveSelected ? "2px solid #ee7f12" : "2px solid transparent",
-              boxShadow: isActiveSelected ? "none" : "0 4px 16px rgba(238,127,18,0.3)",
-            }}
-          >
-            {isActiveSelected ? "✓ 선택됨 (취소하려면 탭)" : "이 카드 선택"}
-          </button>
         </div>
       </div>
     </>

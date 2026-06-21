@@ -17,14 +17,14 @@ interface BoardingPassFanProps {
 
 const CARD_W = 210;
 
-// 가운데 카드 완전 집중 — 옆 카드는 뒤에 살짝만 보임
+// 가운데 카드 집중 — 옆 카드는 충분히 띄워서 보임
 function getSlot(diff: number) {
   const abs = Math.abs(diff);
   const sign = diff >= 0 ? 1 : -1;
-  if (abs === 0) return { tx: 0,         ty: -20, scale: 1,    rot: 0,        z: 10, opacity: 1    };
-  if (abs === 1) return { tx: sign * 70, ty: 0,   scale: 0.75, rot: sign * 14, z: 6,  opacity: 0.55 };
-  if (abs === 2) return { tx: sign * 95, ty: 0,   scale: 0.58, rot: sign * 25, z: 3,  opacity: 0.2  };
-  return                 { tx: sign * 110, ty: 0,  scale: 0.4,  rot: sign * 35, z: 1,  opacity: 0    };
+  if (abs === 0) return { tx: 0,          ty: -20, scale: 1,    rot: 0,         z: 10, opacity: 1    };
+  if (abs === 1) return { tx: sign * 115, ty: 0,   scale: 0.75, rot: sign * 14, z: 6,  opacity: 0.65 };
+  if (abs === 2) return { tx: sign * 165, ty: 0,   scale: 0.58, rot: sign * 25, z: 3,  opacity: 0.3  };
+  return                 { tx: sign * 200, ty: 0,   scale: 0.4,  rot: sign * 35, z: 1,  opacity: 0    };
 }
 
 export default function BoardingPassFan({ options, selectedValues, onSelect }: BoardingPassFanProps) {

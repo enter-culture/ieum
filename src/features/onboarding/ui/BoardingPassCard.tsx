@@ -40,17 +40,18 @@ export default function BoardingPassCard({
       <div className="border-t border-dashed border-gray-200 mx-2" />
 
       {/* 이미지 or 이모지 */}
-      <div className="flex-1 flex items-center justify-center bg-gray-50">
+      <div className="flex-1 relative overflow-hidden">
         {imageSrc ? (
           <Image
             src={imageSrc}
             alt={label}
-            width={80}
-            height={50}
-            className="object-contain"
+            fill
+            className="object-cover"
           />
         ) : (
-          <span className="text-3xl">{emoji}</span>
+          <div className="w-full h-full flex items-center justify-center bg-gray-50">
+            <span className="text-4xl">{emoji}</span>
+          </div>
         )}
       </div>
 

@@ -123,9 +123,14 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
         }
         @keyframes heart-spring {
           0%   { transform: scale(1); }
-          20%  { transform: scale(0.8); }
-          50%  { transform: scale(1.18); }
-          75%  { transform: scale(0.95); }
+          25%  { transform: scale(0.85); }
+          60%  { transform: scale(1.2); }
+          80%  { transform: scale(0.95); }
+          100% { transform: scale(1); }
+        }
+        @keyframes heart-unlike {
+          0%   { transform: scale(1); }
+          40%  { transform: scale(0.8); }
           100% { transform: scale(1); }
         }
       `}</style>
@@ -178,8 +183,23 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
             onClick={(e) => { e.stopPropagation(); handleLike(); }}
             className="flex flex-col items-center gap-1"
           >
-            <div key={popKey} style={{ animation: liked ? "heart-spring 0.45s cubic-bezier(.36,.07,.19,.97) forwards" : "none" }}>
-              <svg width={38} height={38} viewBox="0 0 24 24" fill={liked ? "#ff2d55" : "none"} stroke="white" strokeWidth="1.8" strokeLinejoin="round">
+            <div
+              key={popKey}
+              style={{
+                animation: liked
+                  ? "heart-spring 0.4s cubic-bezier(.34,1.56,.64,1) both"
+                  : "heart-unlike 0.25s ease both",
+                transformOrigin: "center",
+              }}
+            >
+              <svg
+                width={38} height={38} viewBox="0 0 24 24"
+                fill={liked ? "#ff2d55" : "none"}
+                stroke={liked ? "#ff2d55" : "white"}
+                strokeWidth="1.8"
+                strokeLinejoin="round"
+                style={{ transition: "fill 0.15s ease, stroke 0.15s ease" }}
+              >
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
               </svg>
             </div>

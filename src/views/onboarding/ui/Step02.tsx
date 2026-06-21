@@ -2,12 +2,12 @@
 import { useFormContext } from "react-hook-form";
 import { OnboardingSchema } from "@/views/onboarding/model/onboarding_schema";
 import OnboardingTitle from "@/views/onboarding/ui/OnboardingTitle";
-import CheckboxButtonGroup from "@/features/filter/ui/CheckboxButtonGroup";
+import BoardingPassFan from "@/features/onboarding/ui/BoardingPassFan";
 import { CATEGORY_FILTER_OPTIONS } from "@/shared/config/filter";
 
 export default function Step02() {
   const { setValue, watch } = useFormContext<OnboardingSchema>();
-  const placeCategoryList = watch("placeCategoryList") || [];
+  const placeCategoryList = watch("placeCategoryList");
 
   const handleSelect = (value: number | string) => {
     const numValue = Number(value);
@@ -19,12 +19,12 @@ export default function Step02() {
   };
 
   return (
-    <div className="flex flex-col gap-8 px-6 py-8">
+    <div className="flex flex-col gap-4 px-6 py-8 h-full">
       <OnboardingTitle
         title="어떤 무형문화재에 관심있으세요?"
-        subtitle="관심 있는 카테고리를 선택해주세요 (복수 선택 가능)"
+        subtitle="카드를 탭해서 탑승권을 골라보세요"
       />
-      <CheckboxButtonGroup
+      <BoardingPassFan
         options={CATEGORY_FILTER_OPTIONS}
         selectedValues={placeCategoryList}
         onSelect={handleSelect}

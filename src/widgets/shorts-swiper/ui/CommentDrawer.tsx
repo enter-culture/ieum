@@ -1,27 +1,25 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
-
-interface Comment {
-  id: number;
-  text: string;
-  createdAt: string;
-}
+import { useRef, useEffect, useState } from "react";
+import useSWR from "swr";
+import { getComments, createComment, CommentItem } from "@/shared/api/comments";
+import { useAuth } from "@/shared/lib/auth-store";
 
 interface CommentDrawerProps {
   open: boolean;
   onClose: () => void;
+  shortsId: number;
   videoTitle: string;
 }
 
-export default function CommentDrawer({ open, onClose, videoTitle }: CommentDrawerProps) {
-  const [comments, setComments] = useState<Comment[]>([
-    { id: 1, text: "정말 멋진 문화재네요!", createdAt: "방금 전" },
-    { id: 2, text: "처음 봤는데 너무 신기해요 😮", createdAt: "1분 전" },
-  ]);
+export default function CommentDrawer({ open, onClose, shortsId }: CommentDrawerProps) {
+  const { requireAuth } = useAuth();
+  const { data: comments = [], mutate } = useSWR<CommentItem[]>(
+    open ? ["comments", shortsId] : null,
+    () => getComments(shortsId),
+  );
   const [input, setInput] = useState("");
   const [dragY, setDragY] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
-  const idRef = useRef(3);
   const startY = useRef<number | null>(null);
   const isDragging = useRef(false);
 
@@ -29,14 +27,34 @@ export default function CommentDrawer({ open, onClose, videoTitle }: CommentDraw
     if (open) setTimeout(() => inputRef.current?.focus(), 350);
   }, [open]);
 
+  const submit = async (text: string) => {
+    const optimistic: CommentItem = {
+      id: -Date.now(),
+      shortsId,
+      content: text,
+      createdAt: new Date().toISOString(),
+      author: { id: -1, nickname: "나", name: "나", picture: null },
+    };
+    await mutate(
+      async (prev = []) => {
+        const saved = await createComment(shortsId, text);
+        return [saved, ...prev];
+      },
+      {
+        optimisticData: [optimistic, ...comments],
+        rollbackOnError: true,
+        revalidate: false,
+      },
+    );
+  };
+
   const handleSubmit = () => {
     const text = input.trim();
     if (!text) return;
-    setComments((prev) => [
-      { id: idRef.current++, text, createdAt: "방금 전" },
-      ...prev,
-    ]);
-    setInput("");
+    requireAuth(() => {
+      setInput("");
+      void submit(text);
+    });
   };
 
   return (
@@ -107,17 +125,28 @@ export default function CommentDrawer({ open, onClose, videoTitle }: CommentDraw
           {comments.length === 0 ? (
             <p className="text-center text-gray-400 text-sm mt-8">첫 댓글을 남겨보세요!</p>
           ) : (
-            comments.map((c) => (
-              <div key={c.id} className="flex gap-3">
-                <div className="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center text-xs text-gray-500 font-bold">
-                  나
+            comments.map((c) => {
+              const displayName = c.author.nickname ?? c.author.name;
+              return (
+                <div key={c.id} className="flex gap-3">
+                  {c.author.picture ? (
+                    <img
+                      src={c.author.picture}
+                      alt={displayName}
+                      className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center text-xs text-gray-500 font-bold">
+                      {displayName.slice(0, 1)}
+                    </div>
+                  )}
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-xs text-gray-500 font-semibold">{displayName}</span>
+                    <p className="text-sm text-gray-800">{c.content}</p>
+                  </div>
                 </div>
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-xs text-gray-400">{c.createdAt}</span>
-                  <p className="text-sm text-gray-800">{c.text}</p>
-                </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
 

@@ -242,6 +242,7 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
         <CommentDrawer
           open={commentOpen}
           onClose={() => setCommentOpen(false)}
+          shortsId={item.id}
           videoTitle={item.title}
         />
 

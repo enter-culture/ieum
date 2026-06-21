@@ -126,10 +126,9 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
         }
         @keyframes heart-spring {
           0%   { transform: scale(1); }
-          15%  { transform: scale(0.75); }
-          40%  { transform: scale(1.4); }
-          65%  { transform: scale(0.92); }
-          80%  { transform: scale(1.1); }
+          20%  { transform: scale(0.8); }
+          50%  { transform: scale(1.15); }
+          75%  { transform: scale(0.95); }
           100% { transform: scale(1); }
         }
       `}</style>

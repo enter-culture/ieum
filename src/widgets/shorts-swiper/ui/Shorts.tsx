@@ -9,7 +9,7 @@ interface ShortsProps { item: ShortsPlace & { videoSrc: string }; page: number; 
 
 export default function Shorts({ item, page, currentPage }: ShortsProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
   const [showVolumeIcon, setShowVolumeIcon] = useState(false);
   const [isLongPressing, setIsLongPressing] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -63,7 +63,13 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
     const video = videoRef.current;
     if (!video) return;
     if (page === currentPage) {
-      video.play().catch(() => {});
+      video.muted = false;
+      video.play().catch(() => {
+        // 브라우저 정책으로 unmuted 자동재생 실패 시 muted로 재시도
+        video.muted = true;
+        setIsMuted(true);
+        video.play().catch(() => {});
+      });
     } else {
       video.pause();
       video.currentTime = 0;
@@ -77,7 +83,6 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
           ref={videoRef}
           src={item.videoSrc || item.shortsUrl}
           className="w-full h-full rounded-lg object-cover"
-          muted
           loop
           playsInline
           autoPlay={page === 0}

@@ -16,11 +16,6 @@ interface FloatingHeart {
 
 interface ShortsProps { item: ShortsPlace & { videoSrc: string }; page: number; currentPage: number; }
 
-const HeartSVG = ({ size, fill, stroke }: { size: number; fill: string; stroke?: string }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={stroke ?? "none"} strokeWidth={stroke ? 1.5 : 0}>
-    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-  </svg>
-);
 
 export default function Shorts({ item, page, currentPage }: ShortsProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -168,9 +163,12 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
                 ["--hx" as string]: `${h.x}px`,
                 ["--hr" as string]: `${h.rotate}deg`,
                 animation: `heart-burst ${h.duration}ms cubic-bezier(.25,.46,.45,.94) ${h.delay}ms forwards`,
+                fontSize: h.size,
+                color: "#ff2d55",
+                lineHeight: 1,
               }}
             >
-              <HeartSVG size={h.size} fill="#ff2d55" />
+              ♥
             </div>
           ))}
 
@@ -180,9 +178,16 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
           >
             <div
               key={popKey}
-              style={{ animation: liked ? "heart-spring 0.5s cubic-bezier(.36,.07,.19,.97) forwards" : "none" }}
+              style={{
+                fontSize: 36,
+                lineHeight: 1,
+                color: liked ? "#ff2d55" : "transparent",
+                WebkitTextStroke: liked ? "0px" : "1.5px white",
+                textShadow: "0 1px 4px rgba(0,0,0,0.5)",
+                animation: liked ? "heart-spring 0.45s cubic-bezier(.36,.07,.19,.97) forwards" : "none",
+              }}
             >
-              <HeartSVG size={36} fill={liked ? "#ff2d55" : "none"} stroke="white" />
+              ♥
             </div>
             <span className="text-white text-xs font-semibold" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.7)" }}>
               {likeCount.toLocaleString()}

@@ -114,7 +114,7 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
         {/* 프로그레스 바 */}
         <div className="h-[3px] w-full bg-white/20">
           <div
-            className="h-full bg-white transition-none"
+            className="h-full bg-[#FF0000] transition-none"
             style={{ width: `${progress * 100}%` }}
           />
         </div>

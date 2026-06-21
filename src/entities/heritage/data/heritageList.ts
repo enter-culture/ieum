@@ -14,6 +14,8 @@ export const heritageList: Heritage[] = [
     videoSrc: '/videos/01.mp4',
     thumbnail: '/thumbnails/ganggang-sullae.jpg',
     likes: 342,
+    lat: 34.4867,
+    lng: 126.2630,
   },
   {
     id: 'pansori',
@@ -28,6 +30,8 @@ export const heritageList: Heritage[] = [
     videoSrc: '/videos/02.mp4',
     thumbnail: '/thumbnails/pansori.jpg',
     likes: 518,
+    lat: 35.8147,
+    lng: 127.1480,
   },
   {
     id: 'hahoetal',
@@ -42,6 +46,8 @@ export const heritageList: Heritage[] = [
     videoSrc: '/videos/03.mp4',
     thumbnail: '/thumbnails/hahoetal.jpg',
     likes: 287,
+    lat: 36.5390,
+    lng: 128.5180,
   },
   {
     id: 'namsadang',
@@ -56,6 +62,8 @@ export const heritageList: Heritage[] = [
     videoSrc: '/videos/04.mp4',
     thumbnail: '/thumbnails/namsadang.jpg',
     likes: 203,
+    lat: 37.0078,
+    lng: 127.2797,
   },
   {
     id: 'taekkyeon',
@@ -70,5 +78,7 @@ export const heritageList: Heritage[] = [
     videoSrc: '/videos/05.mp4',
     thumbnail: '/thumbnails/taekkyeon.jpg',
     likes: 445,
+    lat: 36.9910,
+    lng: 127.9259,
   },
 ]

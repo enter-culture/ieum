@@ -12,6 +12,12 @@ export default function LikesPage() {
       <div className="px-5 pt-12 pb-6 border-b border-gray-100">
         <h1 className="text-2xl font-bold text-gray-900">좋아요</h1>
         <p className="text-sm text-gray-400 mt-1">좋아요한 쇼츠를 모아볼 수 있어요</p>
+        <button
+          onClick={() => router.push("/recommend")}
+          className="mt-3 rounded-full bg-[#ee7f12] px-4 py-2 text-sm font-medium text-white"
+        >
+          주변 추천 지도 보기
+        </button>
       </div>
 
       {/* 좋아요 섹션 */}

@@ -11,4 +11,6 @@ export type Heritage = {
   videoSrc: string
   thumbnail: string
   likes: number
+  lat: number
+  lng: number
 }

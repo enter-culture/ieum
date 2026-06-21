@@ -53,7 +53,7 @@ export default function CommentDrawer({ open, onClose, videoTitle }: CommentDraw
       <div
         className="fixed left-0 right-0 bottom-0 z-50 bg-white rounded-t-2xl flex flex-col"
         style={{
-          maxHeight: "70dvh",
+          maxHeight: "90dvh",
           transform: open ? "translateY(0)" : "translateY(100%)",
           transition: "transform 0.35s cubic-bezier(.32,.72,0,1)",
         }}

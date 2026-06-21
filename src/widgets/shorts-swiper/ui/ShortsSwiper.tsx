@@ -36,6 +36,25 @@ export default function ShortsSwiper() {
           </div>
         ))}
       </div>
+
+      {/* 업로드 버튼 */}
+      <button
+        onClick={() => router.push("/upload")}
+        className="fixed bottom-8 left-1/2 z-50 flex items-center gap-2 px-5 py-3 rounded-full text-sm font-bold shadow-lg transition-transform active:scale-95"
+        style={{
+          transform: "translateX(-50%)",
+          background: "rgba(255,255,255,0.15)",
+          backdropFilter: "blur(12px)",
+          border: "1.5px solid rgba(255,255,255,0.3)",
+          color: "white",
+        }}
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        쇼츠 등록
+      </button>
     </div>
   );
 }

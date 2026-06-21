@@ -35,6 +35,7 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
   const [uiReady, setUiReady] = useState(false);
 
   const dragX = useRef<number | null>(null);
+  const isDragging = useRef(false);
   const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -47,23 +48,31 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
         )
       );
     }
-    timers.push(setTimeout(() => setFanned(true),   180 + TOTAL * 90 + 700));
-    timers.push(setTimeout(() => setUiReady(true),  180 + TOTAL * 90 + 1050));
+    timers.push(setTimeout(() => setFanned(true),  180 + TOTAL * 90 + 700));
+    timers.push(setTimeout(() => setUiReady(true), 180 + TOTAL * 90 + 1050));
     return () => timers.forEach(clearTimeout);
   }, [TOTAL]);
 
-  const onPointerDown = useCallback((e: React.PointerEvent) => {
-    dragX.current = e.clientX;
-    trackRef.current?.setPointerCapture(e.pointerId);
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    dragX.current = e.touches[0].clientX;
+    isDragging.current = false;
   }, []);
 
-  const onPointerUp = useCallback((e: React.PointerEvent) => {
+  const onTouchMove = useCallback((e: React.TouchEvent) => {
     if (dragX.current === null) return;
-    const dx = e.clientX - dragX.current;
+    if (Math.abs(e.touches[0].clientX - dragX.current) > 8) {
+      isDragging.current = true;
+    }
+  }, []);
+
+  const onTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (dragX.current === null) return;
+    const dx = e.changedTouches[0].clientX - dragX.current;
     dragX.current = null;
-    if (Math.abs(dx) < 12) return;
-    if (dx < 0) setPivot((p) => Math.min(p + 1, TOTAL - 1));
-    else         setPivot((p) => Math.max(p - 1, 0));
+    if (!isDragging.current) return;
+    if (dx < -30) setPivot((p) => Math.min(p + 1, TOTAL - 1));
+    else if (dx > 30) setPivot((p) => Math.max(p - 1, 0));
+    isDragging.current = false;
   }, [TOTAL]);
 
   const activeOption = options[pivot];
@@ -101,8 +110,9 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
             position: "relative",
             overflow: "hidden",
           }}
-          onPointerDown={onPointerDown}
-          onPointerUp={onPointerUp}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
         >
           {options
             .map((option, cardIdx) => {
@@ -125,7 +135,7 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
                 <div
                   key={option.value}
                   onClick={() => {
-                    if (!fanned) return;
+                    if (isDragging.current) return;
                     if (isActive) onSelect(option.value);
                     else setPivot(cardIdx);
                   }}

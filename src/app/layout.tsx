@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { SWRProvider } from "@/shared/lib/swr-provider";
 import Navigation from "@/widgets/navigation/ui/Navigation";
 import { LikesProvider } from "@/shared/lib/likes-store";
+import { AuthProvider } from "@/shared/lib/auth-store";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
@@ -19,12 +20,14 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       <body className="relative bg-white">
         <Suspense fallback={null}>
           <SWRProvider>
-            <LikesProvider>
-              <main className="bg-white w-full h-dvh overflow-y-auto">
-                {children}
-              </main>
-              <Navigation />
-            </LikesProvider>
+            <AuthProvider>
+              <LikesProvider>
+                <main className="bg-white w-full h-dvh overflow-y-auto">
+                  {children}
+                </main>
+                <Navigation />
+              </LikesProvider>
+            </AuthProvider>
           </SWRProvider>
         </Suspense>
       </body>

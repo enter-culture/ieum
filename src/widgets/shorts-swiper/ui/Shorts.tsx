@@ -6,6 +6,7 @@ import ShortsInfoSection from "@/widgets/shorts-swiper/ui/ShortsInfoSection";
 import { ShortsPlace } from "@/shared/api/explore";
 import CommentDrawer from "@/widgets/shorts-swiper/ui/CommentDrawer";
 import { useLikes } from "@/shared/lib/likes-store";
+import { useAuth } from "@/shared/lib/auth-store";
 
 interface FloatingHeart {
   id: number;
@@ -27,6 +28,7 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
   const { isLiked, toggleLike } = useLikes();
+  const { requireAuth } = useAuth();
   const liked = isLiked(item.id);
   const [likeCount, setLikeCount] = useState(item.averageRating ? parseInt(item.averageRating) : 0);
   const [floatingHearts, setFloatingHearts] = useState<FloatingHeart[]>([]);
@@ -46,7 +48,7 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
     setTimeout(() => setShowVolumeIcon(false), 500);
   };
 
-  const handleLike = () => {
+  const performLike = () => {
     const isNowLiked = !liked;
     toggleLike({
       id: item.id,
@@ -79,6 +81,9 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
       );
     }, 1400);
   };
+
+  // 비로그인 시 좋아요 누르면 로그인 모달
+  const handleLike = () => requireAuth(performLike);
 
   const onLongPressVideo = useLongPress(
     () => { setIsLongPressing(true); setIsPaused(true); videoRef.current?.pause(); },

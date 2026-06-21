@@ -1,7 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 interface HeritageDetail {
   name: string;
@@ -20,6 +19,8 @@ export default function HeritageDetailPage({ id }: { id: string }) {
   const [data, setData] = useState<HeritageDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeImg, setActiveImg] = useState(0);
+  const [scrollY, setScrollY] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetch(`/api/heritage/${id}`)
@@ -28,114 +29,161 @@ export default function HeritageDetailPage({ id }: { id: string }) {
       .catch(() => setLoading(false));
   }, [id]);
 
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const onScroll = () => setScrollY(el.scrollTop);
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, []);
+
   if (loading) return (
-    <div className="flex items-center justify-center h-dvh bg-black">
-      <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin" />
+    <div className="flex items-center justify-center h-dvh bg-white">
+      <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin" />
     </div>
   );
 
   if (!data) return (
-    <div className="flex items-center justify-center h-dvh bg-black text-white">
+    <div className="flex items-center justify-center h-dvh bg-white text-gray-400 text-sm">
       데이터를 불러올 수 없습니다.
     </div>
   );
 
   const allImages = (data.images ?? []).length > 0 ? data.images : data.thumbnail ? [data.thumbnail] : [];
   const formattedDate = data.designatedAt
-    ? `${data.designatedAt.slice(0, 4)}년 ${data.designatedAt.slice(4, 6)}월 ${data.designatedAt.slice(6, 8)}일`
+    ? `${data.designatedAt.slice(0, 4)}.${data.designatedAt.slice(4, 6)}.${data.designatedAt.slice(6, 8)}`
     : "";
 
+  const heroOpacity = Math.max(0, 1 - scrollY / 300);
+  const titleY = Math.min(scrollY * 0.3, 60);
+
   return (
-    <div className="min-h-dvh bg-[#0d0d1a] text-white">
-      {/* 헤더 */}
-      <div className="sticky top-0 z-10 flex items-center gap-3 px-4 py-3 bg-[#0d0d1a]/90 backdrop-blur-sm border-b border-white/10">
-        <button onClick={() => router.back()} className="text-white p-1">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M19 12H5M12 5l-7 7 7 7"/>
-          </svg>
-        </button>
-        <h1 className="text-base font-bold">{data.name}</h1>
+    <div ref={containerRef} className="h-dvh overflow-y-auto bg-white" style={{ scrollBehavior: "smooth" }}>
+
+      {/* 뒤로가기 — 고정 */}
+      <button
+        onClick={() => router.back()}
+        className="fixed top-4 left-4 z-50 w-8 h-8 rounded-full flex items-center justify-center transition-all"
+        style={{
+          background: scrollY > 200 ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.25)",
+          backdropFilter: "blur(10px)",
+        }}
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke={scrollY > 200 ? "#000" : "#fff"} strokeWidth="2.5">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+      </button>
+
+      {/* 히어로 — 풀스크린 이미지 */}
+      <div className="relative h-dvh overflow-hidden">
+        {allImages[0] && (
+          <img
+            src={allImages[activeImg]}
+            alt={data.name}
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ transform: `scale(${1 + scrollY * 0.0003}) translateY(${scrollY * 0.15}px)` }}
+          />
+        )}
+        {/* 그라데이션 */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/70" />
+
+        {/* 히어로 텍스트 */}
+        <div
+          className="absolute bottom-0 left-0 right-0 px-6 pb-16"
+          style={{ transform: `translateY(${titleY}px)`, opacity: heroOpacity }}
+        >
+          <p className="text-white/70 text-sm font-medium tracking-widest uppercase mb-2">
+            {data.category}
+          </p>
+          <h1 className="text-white text-5xl font-bold tracking-tight leading-none mb-4">
+            {data.name}
+          </h1>
+          {data.subCategory && (
+            <p className="text-white/60 text-base">{data.subCategory}</p>
+          )}
+        </div>
       </div>
 
-      {/* 이미지 갤러리 */}
-      {allImages.length > 0 && (
-        <div className="relative">
-          <div className="relative w-full aspect-video bg-black overflow-hidden">
-            <img
-              src={allImages[activeImg]}
-              alt={data.name}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d1a] via-transparent to-transparent" />
-            {allImages.length > 1 && (
-              <div className="absolute bottom-3 right-3 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
-                {activeImg + 1} / {allImages.length}
-              </div>
-            )}
-          </div>
-
-          {/* 썸네일 */}
-          {allImages.length > 1 && (
-            <div className="flex gap-2 px-4 py-3 overflow-x-auto scrollbar-hide">
-              {allImages.slice(0, 10).map((img, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveImg(i)}
-                  className="flex-shrink-0 relative w-16 h-16 rounded-lg overflow-hidden"
-                  style={{ border: i === activeImg ? "2px solid #ee7f12" : "2px solid transparent" }}
-                >
-                  <img src={img} alt="" className="w-full h-full object-cover" />
-                </button>
-              ))}
+      {/* 핵심 지표 — 애플 스펙 행 */}
+      <div className="bg-[#f5f5f7] px-6 py-10">
+        <div className="flex justify-around text-center">
+          {formattedDate && (
+            <div>
+              <p className="text-2xl font-bold text-black tracking-tight">{formattedDate}</p>
+              <p className="text-xs text-gray-500 mt-1">지정일</p>
             </div>
+          )}
+          {data.region && (
+            <div>
+              <p className="text-2xl font-bold text-black tracking-tight">{data.region.replace("특별시", "").replace("광역시", "").trim()}</p>
+              <p className="text-xs text-gray-500 mt-1">소재지</p>
+            </div>
+          )}
+          {allImages.length > 0 && (
+            <div>
+              <p className="text-2xl font-bold text-black tracking-tight">{allImages.length}</p>
+              <p className="text-xs text-gray-500 mt-1">아카이브</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 소개 — 대형 타이포그래피 */}
+      {data.content && (
+        <div className="px-6 py-16 bg-white">
+          <p className="text-xs font-semibold text-[#ee7f12] tracking-widest uppercase mb-6">소개</p>
+          <p className="text-xl font-light text-gray-900 leading-relaxed">
+            {data.content.split("\n")[0]}
+          </p>
+          {data.content.split("\n").length > 1 && (
+            <p className="text-base text-gray-500 leading-relaxed mt-6">
+              {data.content.split("\n").slice(1).join(" ").trim()}
+            </p>
           )}
         </div>
       )}
 
-      {/* 정보 */}
-      <div className="px-5 py-4 space-y-6">
-        {/* 분류 태그 */}
-        <div className="flex flex-wrap gap-2">
-          {data.category && (
-            <span className="bg-[#ee7f12]/20 text-[#ee7f12] text-xs px-3 py-1 rounded-full">{data.category}</span>
-          )}
-          {data.subCategory && data.subCategory.split(" > ").map((c) => (
-            <span key={c} className="bg-white/10 text-white/70 text-xs px-3 py-1 rounded-full">{c}</span>
-          ))}
-        </div>
+      {/* 이미지 갤러리 */}
+      {allImages.length > 1 && (
+        <div className="bg-black py-16">
+          <p className="text-xs font-semibold text-[#ee7f12] tracking-widest uppercase px-6 mb-8">갤러리</p>
 
-        {/* 기본 정보 */}
-        <div className="grid grid-cols-2 gap-3">
-          {formattedDate && (
-            <div className="bg-white/5 rounded-xl p-3">
-              <p className="text-white/40 text-xs mb-1">지정일</p>
-              <p className="text-sm font-medium">{formattedDate}</p>
-            </div>
-          )}
-          {data.region && (
-            <div className="bg-white/5 rounded-xl p-3">
-              <p className="text-white/40 text-xs mb-1">소재지</p>
-              <p className="text-sm font-medium">{data.region}</p>
-            </div>
-          )}
-          {data.admin && (
-            <div className="bg-white/5 rounded-xl p-3 col-span-2">
-              <p className="text-white/40 text-xs mb-1">관리단체</p>
-              <p className="text-sm font-medium">{data.admin}</p>
-            </div>
-          )}
-        </div>
-
-        {/* 소개 */}
-        {data.content && (
-          <div>
-            <h2 className="text-sm font-bold text-[#ee7f12] mb-3">소개</h2>
-            <p className="text-sm leading-relaxed text-white/80 whitespace-pre-line">{data.content}</p>
+          {/* 메인 이미지 */}
+          <div className="relative aspect-square overflow-hidden mb-3">
+            <img
+              src={allImages[activeImg]}
+              alt=""
+              className="w-full h-full object-cover transition-all duration-500"
+            />
           </div>
-        )}
-      </div>
 
-      <div className="h-10" />
+          {/* 스크롤 썸네일 */}
+          <div className="flex gap-1 px-1 overflow-x-auto scrollbar-hide">
+            {allImages.slice(0, 12).map((img, i) => (
+              <button
+                key={i}
+                onClick={() => setActiveImg(i)}
+                className="flex-shrink-0 w-20 h-20 overflow-hidden transition-all duration-200"
+                style={{ opacity: i === activeImg ? 1 : 0.4 }}
+              >
+                <img src={img} alt="" className="w-full h-full object-cover" />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 관리 정보 */}
+      {data.admin && (
+        <div className="px-6 py-16 bg-[#f5f5f7]">
+          <p className="text-xs font-semibold text-[#ee7f12] tracking-widest uppercase mb-4">관리단체</p>
+          <p className="text-2xl font-light text-black leading-snug">{data.admin}</p>
+        </div>
+      )}
+
+      {/* 하단 여백 */}
+      <div className="h-20 bg-white" />
     </div>
   );
 }

@@ -23,7 +23,6 @@ export default function CommentDrawer({ open, onClose, videoTitle }: CommentDraw
   const inputRef = useRef<HTMLInputElement>(null);
   const idRef = useRef(3);
   const startX = useRef<number | null>(null);
-  const isDragging = useRef(false);
 
   useEffect(() => {
     if (open) setTimeout(() => inputRef.current?.focus(), 350);
@@ -69,25 +68,6 @@ export default function CommentDrawer({ open, onClose, videoTitle }: CommentDraw
           if (dragX > 80) onClose();
           setDragX(0);
           startX.current = null;
-        }}
-        onMouseDown={(e) => { startX.current = e.clientX; isDragging.current = true; }}
-        onMouseMove={(e) => {
-          if (!isDragging.current || startX.current === null) return;
-          setDragX(Math.max(0, e.clientX - startX.current));
-        }}
-        onMouseUp={() => {
-          if (dragX > 80) onClose();
-          setDragX(0);
-          startX.current = null;
-          isDragging.current = false;
-        }}
-        onMouseLeave={() => {
-          if (isDragging.current) {
-            if (dragX > 80) onClose();
-            setDragX(0);
-            startX.current = null;
-            isDragging.current = false;
-          }
         }}
       >
         {/* 헤더 */}

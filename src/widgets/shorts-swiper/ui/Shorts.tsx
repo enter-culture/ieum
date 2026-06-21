@@ -112,14 +112,14 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
     <>
       <style>{`
         @keyframes heart-float {
-          0%   { transform: translateY(0) scale(1);    opacity: 1; }
-          60%  { transform: translateY(-80px) scale(1.3); opacity: 1; }
-          100% { transform: translateY(-130px) scale(0.8); opacity: 0; }
+          0%   { transform: translateY(0) scale(1); opacity: 1; }
+          70%  { transform: translateY(-90px) scale(1.2); opacity: 0.8; }
+          100% { transform: translateY(-140px) scale(0.6); opacity: 0; }
         }
         @keyframes heart-pop {
           0%   { transform: scale(1); }
-          40%  { transform: scale(1.4); }
-          70%  { transform: scale(0.9); }
+          30%  { transform: scale(1.45); }
+          60%  { transform: scale(0.88); }
           100% { transform: scale(1); }
         }
       `}</style>
@@ -144,37 +144,36 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
           </div>
 
           {/* 오른쪽 사이드 하트 버튼 */}
-          <div className="absolute right-3 bottom-24 z-20 flex flex-col items-center gap-1">
+          <div className="absolute right-4 bottom-28 z-20 flex flex-col items-center gap-1.5">
             {/* 떠오르는 하트들 */}
-            <div className="relative w-10 h-1">
-              {floatingHearts.map((h) => (
-                <div
-                  key={h.id}
-                  style={{
-                    position: "absolute",
-                    bottom: 0,
-                    left: `calc(50% + ${h.x}px)`,
-                    transform: "translateX(-50%)",
-                    animation: "heart-float 0.9s ease-out forwards",
-                    fontSize: "1.4rem",
-                    pointerEvents: "none",
-                  }}
-                >
-                  ❤️
-                </div>
-              ))}
-            </div>
+            {floatingHearts.map((h) => (
+              <div
+                key={h.id}
+                style={{
+                  position: "absolute",
+                  bottom: 40,
+                  left: `calc(50% + ${h.x}px)`,
+                  transform: "translateX(-50%)",
+                  animation: "heart-float 0.9s ease-out forwards",
+                  pointerEvents: "none",
+                }}
+              >
+                <svg width="22" height="20" viewBox="0 0 24 22" fill="#ff2d55">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+              </div>
+            ))}
 
             {/* 하트 버튼 */}
             <button
               onClick={(e) => { e.stopPropagation(); handleLike(); }}
               className="flex flex-col items-center gap-1"
-              style={{ animation: liked ? "heart-pop 0.35s ease" : "none" }}
+              style={{ animation: liked ? "heart-pop 0.35s ease forwards" : "none" }}
             >
-              <span style={{ fontSize: "2rem", filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))" }}>
-                {liked ? "❤️" : "🤍"}
-              </span>
-              <span className="text-white text-xs font-semibold drop-shadow">
+              <svg width="32" height="32" viewBox="0 0 24 22" fill={liked ? "#ff2d55" : "none"} stroke="white" strokeWidth="1.5" style={{ filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.6))" }}>
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+              <span className="text-white text-xs font-semibold drop-shadow-md">
                 {likeCount.toLocaleString()}
               </span>
             </button>

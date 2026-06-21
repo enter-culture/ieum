@@ -129,7 +129,8 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
 
               const stackTy      = Math.max(0, diff) * 3;
               const preTransform = `translateY(${stackTy}px) scale(${1 - Math.max(0, diff) * 0.01})`;
-              const fanTransform = `translateX(${slot.tx}px) translateY(${slot.ty}px) scale(${slot.scale}) rotate(${slot.rot}deg)`;
+              const liftY        = isSelected ? slot.ty - 36 : slot.ty;
+              const fanTransform = `translateX(${slot.tx}px) translateY(${liftY}px) scale(${slot.scale}) rotate(${slot.rot}deg)`;
 
               return (
                 <div

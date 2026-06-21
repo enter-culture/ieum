@@ -16,6 +16,7 @@ export interface CultureEvent {
   lng: number;
 }
 
+/** Convert center coordinate to bbox; note x=lng, y=lat convention. */
 export function toBbox(center: Coord, pad = 0.05) {
   return {
     xfrom: center.lng - pad,

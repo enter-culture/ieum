@@ -25,5 +25,8 @@ describe('fetchEventsForCenters', () => {
       '20260601', '20260831',
     );
     expect(out.map((e) => e.id).sort()).toEqual(['1', '2', '3']);
+    // Verify first-wins dedup: id '2' appears in both responses, should keep first occurrence's title
+    const event2 = out.find((e) => e.id === '2');
+    expect(event2?.title).toBe('t2');
   });
 });

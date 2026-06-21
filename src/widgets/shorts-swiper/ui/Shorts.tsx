@@ -13,6 +13,7 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
   const [showVolumeIcon, setShowVolumeIcon] = useState(false);
   const [isLongPressing, setIsLongPressing] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const handleToggleMute = () => {
     const video = videoRef.current;
@@ -62,6 +63,16 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+    const onTimeUpdate = () => {
+      if (video.duration) setProgress(video.currentTime / video.duration);
+    };
+    video.addEventListener("timeupdate", onTimeUpdate);
+    return () => video.removeEventListener("timeupdate", onTimeUpdate);
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
     if (page === currentPage) {
       video.muted = false;
       video.play().catch(() => {
@@ -96,8 +107,17 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
           <MuteToggleIcon showVolumeIcon={showVolumeIcon} isMuted={isMuted} />
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 p-4 z-30">
-        <ShortsInfoSection item={item} />
+      <div className="absolute bottom-0 left-0 right-0 z-30">
+        <div className="p-4">
+          <ShortsInfoSection item={item} />
+        </div>
+        {/* 프로그레스 바 */}
+        <div className="h-[3px] w-full bg-white/20">
+          <div
+            className="h-full bg-white transition-none"
+            style={{ width: `${progress * 100}%` }}
+          />
+        </div>
       </div>
     </div>
   );

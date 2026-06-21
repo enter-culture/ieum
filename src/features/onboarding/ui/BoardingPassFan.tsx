@@ -200,7 +200,7 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
                       {/* 이미지 */}
                       <div style={{ position: "relative", height: "240px", overflow: "hidden" }}>
                         {option.imageSrc ? (
-                          <Image src={option.imageSrc} alt={option.label} fill style={{ objectFit: "cover" }} draggable={false} />
+                          <Image src={option.imageSrc} alt={option.label} fill style={{ objectFit: "cover" }} draggable={false} unoptimized />
                         ) : (
                           <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "#f5f5f5", fontSize: "3rem" }}>
                             {option.emoji}

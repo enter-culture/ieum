@@ -213,19 +213,9 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
                         {isSelected && (
                           <div style={{
                             position: "absolute", inset: 0,
-                            background: "rgba(238,127,18,0.18)",
-                            display: "flex", alignItems: "center", justifyContent: "center",
+                            background: "rgba(238,127,18,0.15)",
                             pointerEvents: "none",
-                          }}>
-                            <div style={{
-                              width: 52, height: 52,
-                              borderRadius: "999px",
-                              background: "#ee7f12",
-                              display: "flex", alignItems: "center", justifyContent: "center",
-                              fontSize: "1.5rem", color: "white", fontWeight: 900,
-                              boxShadow: "0 4px 16px rgba(238,127,18,0.5)",
-                            }}>✓</div>
-                          </div>
+                          }} />
                         )}
                         {isActive && fanned && (
                           <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(105deg, transparent 30%, rgba(238,127,18,0.12) 50%, transparent 70%)", backgroundSize: "200% 100%", animation: "bp-shimmer 2.5s ease-in-out infinite" }} />

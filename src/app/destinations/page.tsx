@@ -3,14 +3,21 @@ import { useEffect, useState, useCallback } from "react";
 import { fetchEventsForCenters, type CultureEvent } from "@/shared/api/culture";
 import { CHIPS, filterByKind } from "@/widgets/recommend-map/lib/filter";
 
+function localDateStr(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}${m}${day}`;
+}
+
 function todayStr(): string {
-  return new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  return localDateStr(new Date());
 }
 
 function plusDaysStr(days: number): string {
   const d = new Date();
   d.setDate(d.getDate() + days);
-  return d.toISOString().slice(0, 10).replace(/-/g, "");
+  return localDateStr(d);
 }
 
 export default function DestinationsPage() {
@@ -47,7 +54,7 @@ export default function DestinationsPage() {
 
   useEffect(() => {
     requestLocation();
-  }, []);
+  }, [requestLocation]);
 
   const displayed = filterByKind(events, activeKind);
 
@@ -104,7 +111,7 @@ export default function DestinationsPage() {
       {!loading && displayed.length > 0 && (
         <div className="px-5 space-y-3">
           {displayed.map((event) => (
-            <div key={event.id} className="flex gap-3 p-3 rounded-2xl border border-gray-100 hover:border-gray-200 transition-colors cursor-pointer active:bg-gray-50">
+            <div key={event.id} className="flex gap-3 p-3 rounded-2xl border border-gray-100 hover:border-gray-200 transition-colors">
               {/* 썸네일 */}
               <div className="w-20 h-20 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
                 {event.thumbnail ? (

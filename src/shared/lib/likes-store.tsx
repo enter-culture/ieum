@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react";
 import { useAuth } from "@/shared/lib/auth-store";
 import { addLike, fetchLikes, removeLike } from "@/shared/api/likes";
 
@@ -91,7 +91,10 @@ export function LikesProvider({ children }: { children: React.ReactNode }) {
 
   const isLiked = useCallback((id: number) => !!likes[id], [likes]);
 
-  const likedList = Object.values(likes).sort((a, b) => b.likedAt - a.likedAt);
+  const likedList = useMemo(
+    () => Object.values(likes).sort((a, b) => b.likedAt - a.likedAt),
+    [likes],
+  );
 
   return (
     <LikesContext.Provider value={{ likes, isLiked, toggleLike, likedList }}>

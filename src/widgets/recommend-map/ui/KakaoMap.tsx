@@ -15,25 +15,29 @@ export default function KakaoMap({ sources, events, onSelect }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
+  const [mapReady, setMapReady] = useState(false);
   const [error, setError] = useState(false);
 
-  // 지도 초기화
+  // 지도 초기화 — 한 번만 실행 (sources identity 변화에 재생성하지 않음)
   useEffect(() => {
+    if (mapRef.current) return; // 이미 초기화됨
     let cancelled = false;
     loadKakao()
       .then((k: any) => {
-        if (cancelled || !ref.current) return;
+        if (cancelled || !ref.current || mapRef.current) return;
         const center = sources[0] ?? { lat: 37.5666, lng: 126.9784 };
         mapRef.current = new k.maps.Map(ref.current, {
           center: new k.maps.LatLng(center.lat, center.lng),
           level: 8,
         });
+        setMapReady(true);
       })
       .catch(() => setError(true));
     return () => { cancelled = true; };
-  }, [sources]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // 마커 갱신
+  // 마커 갱신 — mapReady가 true가 된 뒤에도 재실행되도록 의존성에 포함
   useEffect(() => {
     const w = window as any;
     const k = w.kakao;
@@ -50,7 +54,7 @@ export default function KakaoMap({ sources, events, onSelect }: Props) {
         position: pos, map,
         image: new k.maps.MarkerImage(
           "data:image/svg+xml;base64," + btoa(
-            '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"><circle cx="14" cy="14" r="10" fill="%23ee7f12"/></svg>'.replace("%23", "#"),
+            '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"><circle cx="14" cy="14" r="10" fill="#ee7f12"/></svg>',
           ),
           new k.maps.Size(28, 28),
         ),
@@ -69,7 +73,14 @@ export default function KakaoMap({ sources, events, onSelect }: Props) {
     });
 
     if (!bounds.isEmpty()) map.setBounds(bounds);
-  }, [sources, events, onSelect]);
+  }, [mapReady, sources, events, onSelect]);
+
+  // 언마운트 시 마커 정리
+  useEffect(() => {
+    return () => {
+      markersRef.current.forEach((m) => m.setMap(null));
+    };
+  }, []);
 
   if (error) {
     return (

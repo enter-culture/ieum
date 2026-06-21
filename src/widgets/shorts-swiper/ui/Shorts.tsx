@@ -56,13 +56,13 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
     if (!isNowLiked) return;
 
     // 6개 하트, 각자 다른 방향·크기·속도로 퍼짐
-    const offsets = [-36, -20, -8, 8, 20, 36];
+    const offsets = [-50, -28, -10, 10, 28, 50];
     const newHearts: FloatingHeart[] = offsets.map((x, i) => ({
       id: heartIdRef.current++,
       x,
-      size: 28 + (i % 3) * 10,
+      size: 52 + (i % 3) * 16,
       rotate: -25 + i * 10,
-      duration: 800 + i * 90,
+      duration: 900 + i * 90,
       delay: i * 50,
     }));
     setFloatingHearts((prev) => [...prev, ...newHearts]);
@@ -120,9 +120,9 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
     <>
       <style>{`
         @keyframes heart-burst {
-          0%   { transform: translateY(0px)   translateX(0px) rotate(0deg)   scale(0.3); opacity: 0.9; }
+          0%   { transform: translateY(0px)    translateX(0px) rotate(0deg)   scale(0.4); opacity: 1; }
           30%  { opacity: 1; }
-          100% { transform: translateY(-120px) translateX(var(--hx)) rotate(var(--hr)) scale(0);   opacity: 0; }
+          100% { transform: translateY(-200px) translateX(var(--hx)) rotate(var(--hr)) scale(0.2); opacity: 0; }
         }
         @keyframes heart-spring {
           0%   { transform: scale(1); }

@@ -15,17 +15,16 @@ interface BoardingPassFanProps {
   onSelect: (value: number | string) => void;
 }
 
-const CARD_W = 175;
+const CARD_W = 210;
 
-// diff 기준 좌우 대칭 슬롯
 function getSlot(diff: number) {
   const abs = Math.abs(diff);
   const sign = diff >= 0 ? 1 : -1;
-  if (abs === 0) return { tx: 0,           ty: -24, scale: 1,    rot: 0,         z: 8, opacity: 1   };
-  if (abs === 1) return { tx: sign * 95,   ty: 0,   scale: 0.82, rot: sign * 12, z: 6, opacity: 0.85 };
-  if (abs === 2) return { tx: sign * 155,  ty: 0,   scale: 0.65, rot: sign * 24, z: 4, opacity: 0.5 };
-  if (abs === 3) return { tx: sign * 200,  ty: 0,   scale: 0.48, rot: sign * 36, z: 2, opacity: 0.25 };
-  return                 { tx: sign * 240, ty: 0,   scale: 0.3,  rot: sign * 45, z: 0, opacity: 0   };
+  if (abs === 0) return { tx: 0,          ty: -28, scale: 1,    rot: 0,         z: 8, opacity: 1    };
+  if (abs === 1) return { tx: sign * 110, ty: 0,   scale: 0.80, rot: sign * 14, z: 6, opacity: 0.85 };
+  if (abs === 2) return { tx: sign * 175, ty: 0,   scale: 0.62, rot: sign * 26, z: 4, opacity: 0.5  };
+  if (abs === 3) return { tx: sign * 220, ty: 0,   scale: 0.45, rot: sign * 38, z: 2, opacity: 0.25 };
+  return                 { tx: sign * 260, ty: 0,  scale: 0.3,  rot: sign * 50, z: 0, opacity: 0    };
 }
 
 export default function BoardingPassFan({ options, selectedValues, onSelect }: BoardingPassFanProps) {
@@ -38,21 +37,18 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
   const dragX = useRef<number | null>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
-  const FLIP_INTERVAL = 90;
-  const FAN_DELAY = 700;
-
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = [];
     for (let i = 0; i < TOTAL; i++) {
       timers.push(
         setTimeout(
           () => setFlipped((p) => { const n = [...p]; n[i] = true; return n; }),
-          180 + i * FLIP_INTERVAL
+          180 + i * 90
         )
       );
     }
-    timers.push(setTimeout(() => setFanned(true), 180 + TOTAL * FLIP_INTERVAL + FAN_DELAY));
-    timers.push(setTimeout(() => setUiReady(true), 180 + TOTAL * FLIP_INTERVAL + FAN_DELAY + 350));
+    timers.push(setTimeout(() => setFanned(true),   180 + TOTAL * 90 + 700));
+    timers.push(setTimeout(() => setUiReady(true),  180 + TOTAL * 90 + 1050));
     return () => timers.forEach(clearTimeout);
   }, [TOTAL]);
 
@@ -67,7 +63,7 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
     dragX.current = null;
     if (Math.abs(dx) < 12) return;
     if (dx < 0) setPivot((p) => Math.min(p + 1, TOTAL - 1));
-    else setPivot((p) => Math.max(p - 1, 0));
+    else         setPivot((p) => Math.max(p - 1, 0));
   }, [TOTAL]);
 
   const activeOption = options[pivot];
@@ -87,11 +83,14 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
         }
       `}</style>
 
-      <div className="flex flex-col items-center w-full gap-4 py-4">
-        {/* 팬 컨테이너 */}
+      {/* flex-1 로 남은 화면 전부 사용 */}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", flex: 1, gap: 12, paddingBottom: 8 }}>
+
+        {/* 팬 컨테이너 — flex-1 로 높이 자동 확장 */}
         <div
           ref={trackRef}
           style={{
+            flex: 1,
             touchAction: "pan-y",
             userSelect: "none",
             cursor: fanned ? "grab" : "default",
@@ -99,7 +98,6 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
             justifyContent: "center",
             alignItems: "center",
             width: "100%",
-            height: "360px",
             position: "relative",
             overflow: "hidden",
           }}
@@ -114,12 +112,12 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
             })
             .sort((a, b) => a.slot.z - b.slot.z)
             .map(({ option, cardIdx, diff, slot }) => {
-              const isActive = diff === 0;
-              const isFlipped = flipped[cardIdx];
-              const isVisible = Math.abs(diff) <= 3;
+              const isActive   = diff === 0;
+              const isFlipped  = flipped[cardIdx];
+              const isVisible  = Math.abs(diff) <= 3;
               const isSelected = selectedValues.includes(option.value);
 
-              const stackTy = Math.max(0, diff) * 2;
+              const stackTy      = Math.max(0, diff) * 2;
               const preTransform = `translateY(${stackTy}px) scale(${1 - Math.max(0, diff) * 0.008})`;
               const fanTransform = `translateX(${slot.tx}px) translateY(${slot.ty}px) scale(${slot.scale}) rotate(${slot.rot}deg)`;
 
@@ -144,15 +142,15 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
                     transition: "transform 0.45s cubic-bezier(.16,1,.3,1), opacity 0.35s ease",
                     pointerEvents: isVisible ? "auto" : "none",
                     filter: isActive && fanned
-                      ? "drop-shadow(0 8px 30px rgba(0,0,0,0.6)) drop-shadow(0 0 12px rgba(238,127,18,0.4))"
-                      : "drop-shadow(0 8px 24px rgba(0,0,0,0.5))",
+                      ? "drop-shadow(0 8px 30px rgba(0,0,0,0.5)) drop-shadow(0 0 16px rgba(238,127,18,0.4))"
+                      : "drop-shadow(0 4px 16px rgba(0,0,0,0.3))",
                   }}
                 >
                   <div style={{ width: "100%", position: "relative" }}>
                     {/* 뒷면 */}
                     <div style={{
                       position: "absolute", inset: 0, zIndex: 2,
-                      borderRadius: "10px",
+                      borderRadius: "12px",
                       background: "linear-gradient(135deg, #1a1832 0%, #0f0e1a 50%, #1a1832 100%)",
                       border: "2px solid #ee7f12",
                       display: "flex", alignItems: "center", justifyContent: "center",
@@ -161,18 +159,18 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
                       transform: isFlipped ? "rotateY(90deg)" : "rotateY(0deg)",
                       transition: "transform 0.28s ease, opacity 0.25s ease",
                     }}>
-                      <span style={{ fontSize: "1.5rem", color: "rgba(238,127,18,0.4)" }}>✈</span>
+                      <span style={{ fontSize: "2rem", color: "rgba(238,127,18,0.4)" }}>✈</span>
                     </div>
 
-                    {/* 앞면 - 탑승권 스타일 */}
+                    {/* 앞면 */}
                     <div style={{
-                      borderRadius: "10px",
+                      borderRadius: "12px",
                       overflow: "hidden",
                       position: "relative",
-                      border: isSelected ? "2px solid #ee7f12" : "2px solid transparent",
+                      border: isSelected ? "2.5px solid #ee7f12" : "2px solid transparent",
                       boxShadow: isActive
-                        ? "0 16px 48px rgba(0,0,0,0.7), 0 0 24px rgba(238,127,18,0.3)"
-                        : "0 16px 48px rgba(0,0,0,0.7)",
+                        ? "0 16px 48px rgba(0,0,0,0.5), 0 0 28px rgba(238,127,18,0.25)"
+                        : "0 8px 24px rgba(0,0,0,0.3)",
                       opacity: isFlipped ? 1 : 0,
                       transform: isFlipped ? "rotateY(0deg)" : "rotateY(-90deg)",
                       transition: "opacity 0.3s ease 0.08s, transform 0.32s ease 0.06s, box-shadow 0.3s",
@@ -180,87 +178,44 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
                       background: "#fff",
                     }}>
                       {/* 헤더 */}
-                      <div style={{
-                        background: "#FFF3E0",
-                        padding: "5px 8px",
-                        display: "flex", flexDirection: "column", gap: 2,
-                      }}>
-                        <span style={{ fontSize: "10px", fontWeight: 700, color: "#ee7f12", letterSpacing: "0.1em" }}>이음 AIR ✈</span>
-                        <span style={{ fontSize: "9px", color: "#999" }}>GATE: {option.label}</span>
+                      <div style={{ background: "#FFF3E0", padding: "7px 10px", display: "flex", flexDirection: "column", gap: 2 }}>
+                        <span style={{ fontSize: "11px", fontWeight: 700, color: "#ee7f12", letterSpacing: "0.1em" }}>이음 AIR ✈</span>
+                        <span style={{ fontSize: "10px", color: "#aaa" }}>GATE: {option.label}</span>
                       </div>
 
                       {/* 퍼포레이션 */}
-                      <div style={{ borderTop: "1px dashed #e0e0e0", margin: "0 8px" }} />
+                      <div style={{ borderTop: "1px dashed #e0e0e0", margin: "0 10px" }} />
 
-                      {/* 이미지 영역 */}
-                      <div style={{ position: "relative", height: "195px", overflow: "hidden" }}>
+                      {/* 이미지 */}
+                      <div style={{ position: "relative", height: "240px", overflow: "hidden" }}>
                         {option.imageSrc ? (
-                          <Image
-                            src={option.imageSrc}
-                            alt={option.label}
-                            fill
-                            style={{ objectFit: "cover" }}
-                            draggable={false}
-                          />
+                          <Image src={option.imageSrc} alt={option.label} fill style={{ objectFit: "cover" }} draggable={false} />
                         ) : (
-                          <div style={{
-                            width: "100%", height: "100%",
-                            display: "flex", alignItems: "center", justifyContent: "center",
-                            background: "#f5f5f5", fontSize: "2.5rem",
-                          }}>
+                          <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "#f5f5f5", fontSize: "3rem" }}>
                             {option.emoji}
                           </div>
                         )}
-                        {/* 하단 그라데이션 페이드 */}
-                        <div style={{
-                          position: "absolute", inset: 0,
-                          background: "linear-gradient(transparent 50%, rgba(0,0,0,0.6) 100%)",
-                          pointerEvents: "none",
-                        }} />
-                        {/* 카드명 */}
-                        <span style={{
-                          position: "absolute", bottom: "8%", left: "10%", right: "10%",
-                          textAlign: "center",
-                          fontWeight: 700, fontSize: "0.75rem",
-                          color: "#f0d48a",
-                          textShadow: "0 2px 8px rgba(0,0,0,0.9)",
-                          pointerEvents: "none",
-                        }}>
+                        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(transparent 55%, rgba(0,0,0,0.65) 100%)", pointerEvents: "none" }} />
+                        <span style={{ position: "absolute", bottom: "8%", left: 0, right: 0, textAlign: "center", fontWeight: 700, fontSize: "0.9rem", color: "#f0d48a", textShadow: "0 2px 8px rgba(0,0,0,0.9)", pointerEvents: "none" }}>
                           {option.label}
                         </span>
-                        {/* 선택됨 배지 */}
                         {isSelected && (
-                          <div style={{
-                            position: "absolute", top: 6, right: 6,
-                            background: "#ee7f12", color: "white",
-                            borderRadius: "999px", padding: "2px 6px",
-                            fontSize: "8px", fontWeight: 700,
-                          }}>
+                          <div style={{ position: "absolute", top: 8, right: 8, background: "#ee7f12", color: "white", borderRadius: "999px", padding: "3px 8px", fontSize: "10px", fontWeight: 700 }}>
                             ✓
                           </div>
                         )}
-                        {/* shimmer */}
                         {isActive && fanned && (
-                          <div style={{
-                            position: "absolute", inset: 0, pointerEvents: "none",
-                            background: "linear-gradient(105deg, transparent 30%, rgba(238,127,18,0.15) 50%, transparent 70%)",
-                            backgroundSize: "200% 100%",
-                            animation: "bp-shimmer 2.5s ease-in-out infinite",
-                          }} />
+                          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(105deg, transparent 30%, rgba(238,127,18,0.12) 50%, transparent 70%)", backgroundSize: "200% 100%", animation: "bp-shimmer 2.5s ease-in-out infinite" }} />
                         )}
                       </div>
 
                       {/* 퍼포레이션 */}
-                      <div style={{ borderTop: "1px dashed #e0e0e0", margin: "0 8px" }} />
+                      <div style={{ borderTop: "1px dashed #e0e0e0", margin: "0 10px" }} />
 
                       {/* 바코드 */}
-                      <div style={{ padding: "5px 8px", display: "flex", gap: 1 }}>
-                        {Array.from({ length: 22 }).map((_, i) => (
-                          <div key={i} style={{
-                            background: "#ccc",
-                            width: i % 3 === 0 ? 2 : 1,
-                            height: 8,
-                          }} />
+                      <div style={{ padding: "6px 10px", display: "flex", gap: 1 }}>
+                        {Array.from({ length: 26 }).map((_, i) => (
+                          <div key={i} style={{ background: "#ccc", width: i % 3 === 0 ? 2 : 1, height: 9 }} />
                         ))}
                       </div>
                     </div>
@@ -276,11 +231,13 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
           opacity: uiReady ? 1 : 0,
           transform: uiReady ? "translateY(0)" : "translateY(8px)",
           transition: "opacity 0.35s ease, transform 0.35s ease",
+          paddingBottom: 4,
         }}>
-          <p style={{ fontSize: "0.9rem", color: "#333", fontWeight: 700 }}>
+          <p style={{ fontSize: "1rem", color: "#333", fontWeight: 700 }}>
             {activeOption?.label}
-            {isActiveSelected && <span style={{ marginLeft: 6, color: "#ee7f12" }}>✓</span>}
+            {isActiveSelected && <span style={{ marginLeft: 8, color: "#ee7f12" }}>✓</span>}
           </p>
+          <p style={{ fontSize: "0.75rem", color: "#aaa", marginTop: 2 }}>탭해서 선택 · 스와이프로 이동</p>
         </div>
       </div>
     </>

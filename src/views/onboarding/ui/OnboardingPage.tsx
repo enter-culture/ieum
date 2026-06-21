@@ -24,12 +24,10 @@ function OnboardingContent() {
     }
   };
 
-  const isDark = step === "1";
-
   return (
     <FormProvider {...form}>
-      <div className={`relative h-full ${isDark ? "bg-[#07060e]" : "bg-white"}`}>
-        <OnboardingHeader step={step} totalSteps={totalSteps} isFirstStep={isFirstStep} onPrevStep={prevStep} dark={isDark} />
+      <div className="relative h-full bg-white">
+        <OnboardingHeader step={step} totalSteps={totalSteps} isFirstStep={isFirstStep} onPrevStep={prevStep} />
         {renderStep()}
         <div className="absolute bottom-0 w-full">
           <OnboardingFooter step={step as "1"|"2"} isLastStep={isLastStep} onNextStep={nextStep} />

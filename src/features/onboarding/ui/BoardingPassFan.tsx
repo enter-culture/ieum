@@ -276,50 +276,17 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
             })}
         </div>
 
-        {/* 카드명 + 버튼 */}
+        {/* 카드명 */}
         <div style={{
-          width: "100%", padding: "0 1.25rem",
-          display: "flex", flexDirection: "column", alignItems: "center", gap: "0.75rem",
+          textAlign: "center",
           opacity: uiReady ? 1 : 0,
           transform: uiReady ? "translateY(0)" : "translateY(8px)",
           transition: "opacity 0.35s ease, transform 0.35s ease",
         }}>
-          <div style={{ textAlign: "center" }}>
-            <p style={{ fontSize: "0.9rem", color: "#f0d48a", fontWeight: 700, marginBottom: 3 }}>
-              {activeOption?.label}
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => activeOption && onSelect(activeOption.value)}
-            style={{
-              width: "100%",
-              background: isActiveSelected ? "transparent" : "#ee7f12",
-              color: isActiveSelected ? "#ee7f12" : "#fff",
-              border: isActiveSelected ? "1px solid #ee7f12" : "none",
-              borderRadius: "9999px",
-              padding: "0.9rem 1.5rem",
-              fontSize: "1rem", fontWeight: 700,
-              cursor: "pointer",
-              letterSpacing: "0.04em",
-              boxShadow: isActiveSelected ? "none" : "0 0 30px rgba(238,127,18,0.3)",
-              transition: "all 0.2s",
-            }}
-          >
-            {isActiveSelected ? "✓ 선택됨 (탭하여 해제)" : "이 카드 선택하기"}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setPivot((p) => Math.min(p + 1, TOTAL - 1))}
-            style={{
-              background: "transparent", border: "none", color: "#635c78",
-              fontSize: "0.85rem", cursor: "pointer", padding: "4px 0",
-            }}
-          >
-            다른 카드 보기
-          </button>
+          <p style={{ fontSize: "0.9rem", color: "#333", fontWeight: 700 }}>
+            {activeOption?.label}
+            {isActiveSelected && <span style={{ marginLeft: 6, color: "#ee7f12" }}>✓</span>}
+          </p>
         </div>
       </div>
     </>

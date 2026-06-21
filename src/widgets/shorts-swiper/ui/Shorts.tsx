@@ -173,7 +173,7 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
         </div>
 
         {/* 하트 버튼 — 비디오 오른쪽 검정 영역에 위치 */}
-        <div className="absolute right-6 bottom-28 z-20 flex flex-col items-center gap-1.5">
+        <div className="absolute right-6 bottom-28 z-40 flex flex-col items-center gap-1.5">
           <button
             onClick={(e) => { e.stopPropagation(); handleLike(); }}
             className="flex flex-col items-center gap-1"

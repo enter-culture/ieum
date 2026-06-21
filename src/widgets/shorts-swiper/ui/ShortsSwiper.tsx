@@ -3,8 +3,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import useShorts from "@/entities/heritage/model/useShorts";
 import Shorts from "@/widgets/shorts-swiper/ui/Shorts";
-import FilterDrawerButton from "@/widgets/filter-drawer/ui/FilterDrawerButton";
-
 export default function ShortsSwiper() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(0);
@@ -37,9 +35,6 @@ export default function ShortsSwiper() {
             <Shorts item={item} page={index} currentPage={currentPage} />
           </div>
         ))}
-      </div>
-      <div className="absolute bottom-4 left-4 z-20">
-        <FilterDrawerButton onApplyFilter={() => {}} />
       </div>
     </div>
   );

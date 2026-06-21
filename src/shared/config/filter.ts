@@ -10,11 +10,11 @@ export const CATEGORY_FILTER_OPTIONS = [
 ];
 
 export const LOCATION_FILTER_OPTIONS = [
-  { label: "서울", value: 1, emoji: "🏙️", imageSrc: "/images/locations/seoul.png" },
-  { label: "경기", value: 2, emoji: "🌿", imageSrc: "/images/locations/gyeonggi.png" },
-  { label: "강원", value: 3, emoji: "⛰️", imageSrc: "/images/locations/gangwon.png" },
-  { label: "충청", value: 4, emoji: "🌾", imageSrc: "/images/locations/chungcheong.png" },
-  { label: "전라", value: 5, emoji: "🏯", imageSrc: "/images/locations/jeolla.png" },
-  { label: "경상", value: 6, emoji: "🛕", imageSrc: "/images/locations/gyeongsang.png" },
-  { label: "제주", value: 7, emoji: "🌋", imageSrc: "/images/locations/jeju.png" },
+  { label: "서울", value: 1, emoji: "🏙️", imageSrc: "/images/locations/seoul-journey.png" },
+  { label: "경기", value: 2, emoji: "🌿", imageSrc: "/images/locations/gyeonggi-journey.png" },
+  { label: "강원", value: 3, emoji: "⛰️", imageSrc: "/images/locations/gangwon-journey.png" },
+  { label: "충청", value: 4, emoji: "🌾", imageSrc: "/images/locations/chungcheong-journey.png" },
+  { label: "전라", value: 5, emoji: "🏯", imageSrc: "/images/locations/jeolla-journey.png" },
+  { label: "경상", value: 6, emoji: "🛕", imageSrc: "/images/locations/gyeongsang-journey.png" },
+  { label: "제주", value: 7, emoji: "🌋", imageSrc: "/images/locations/jeju-journey.png" },
 ];

@@ -71,8 +71,8 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
   }, [page, currentPage]);
 
   return (
-    <div className="flex bg-black h-[calc(100dvh-80px)] relative">
-      <div className="w-full aspect-[9/16] relative max-w-sm mx-auto max-h-[calc(100dvh-80px)]">
+    <div className="flex bg-black h-dvh relative">
+      <div className="w-full aspect-[9/16] relative max-w-sm mx-auto max-h-dvh">
         <video
           ref={videoRef}
           src={item.videoSrc || item.shortsUrl}

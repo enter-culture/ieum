@@ -28,12 +28,12 @@ export default function ShortsSwiper() {
   return (
     <div className="relative">
       <div
-        className="h-[calc(100dvh-80px)] overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
+        className="h-dvh overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
         onScroll={handleScroll}
         style={{ scrollSnapType: "y mandatory" }}
       >
         {data.map((item, index) => (
-          <div key={item.id} className="snap-start snap-always h-[calc(100dvh-80px)]">
+          <div key={item.id} className="snap-start snap-always h-dvh">
             <Shorts item={item} page={index} currentPage={currentPage} />
           </div>
         ))}

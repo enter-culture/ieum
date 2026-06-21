@@ -131,7 +131,7 @@ export default function CommentDrawer({ open, onClose, videoTitle }: CommentDraw
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleSubmit(); } }}
             placeholder="댓글 추가..."
             className="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm outline-none"
           />

@@ -7,7 +7,7 @@ import { CATEGORY_FILTER_OPTIONS } from "@/shared/config/filter";
 
 export default function Step02() {
   const { setValue, watch } = useFormContext<OnboardingSchema>();
-  const placeCategoryList = watch("placeCategoryList");
+  const placeCategoryList = watch("placeCategoryList") ?? [];
 
   const handleSelect = (value: number | string) => {
     const numValue = Number(value);

@@ -17,7 +17,7 @@ export default function BoardingPassFan({
   onSelect,
 }: BoardingPassFanProps) {
   return (
-    <div className="relative w-full h-72 flex items-end justify-center">
+    <div className="relative w-full h-72 flex items-end justify-center overflow-hidden">
       {options.map((option, index) => {
         const isSelected = selectedValues.includes(option.value);
         const angle = ANGLES[index] ?? 0;

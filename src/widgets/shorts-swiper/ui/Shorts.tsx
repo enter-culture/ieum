@@ -159,30 +159,32 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
 
         {/* 하트 버튼 — 비디오 오른쪽 검정 영역에 위치 */}
         <div className="absolute right-6 bottom-28 z-20 flex flex-col items-center gap-1.5">
-          {floatingHearts.map((h) => (
-            <div
-              key={h.id}
-              style={{
-                position: "absolute",
-                bottom: 20,
-                left: "50%",
-                marginLeft: -h.size / 2,
-                pointerEvents: "none",
-                ["--hx" as string]: `${h.x}px`,
-                ["--hr" as string]: `${h.rotate}deg`,
-                animation: `heart-burst ${h.duration}ms cubic-bezier(.25,.46,.45,.94) ${h.delay}ms forwards`,
-              }}
-            >
-              <svg width={h.size} height={h.size} viewBox="0 0 24 24" fill="#ff2d55">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-              </svg>
-            </div>
-          ))}
-
           <button
             onClick={(e) => { e.stopPropagation(); handleLike(); }}
             className="flex flex-col items-center gap-1"
+            style={{ position: "relative" }}
           >
+            {/* 파티클 — 버튼 기준으로 올라옴 */}
+            {floatingHearts.map((h) => (
+              <div
+                key={h.id}
+                style={{
+                  position: "absolute",
+                  bottom: "50%",
+                  left: "50%",
+                  marginLeft: -h.size / 2,
+                  pointerEvents: "none",
+                  ["--hx" as string]: `${h.x}px`,
+                  ["--hr" as string]: `${h.rotate}deg`,
+                  animation: `heart-burst ${h.duration}ms cubic-bezier(.25,.46,.45,.94) ${h.delay}ms forwards`,
+                  zIndex: 30,
+                }}
+              >
+                <svg width={h.size} height={h.size} viewBox="0 0 24 24" fill="#ff2d55">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+              </div>
+            ))}
             <div
               key={popKey}
               style={{

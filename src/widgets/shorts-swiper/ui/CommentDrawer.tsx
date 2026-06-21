@@ -22,7 +22,8 @@ export default function CommentDrawer({ open, onClose, videoTitle }: CommentDraw
   const [dragY, setDragY] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const idRef = useRef(3);
-  const touchStartY = useRef<number | null>(null);
+  const startY = useRef<number | null>(null);
+  const isDragging = useRef(false);
 
   useEffect(() => {
     if (open) setTimeout(() => inputRef.current?.focus(), 350);
@@ -59,16 +60,34 @@ export default function CommentDrawer({ open, onClose, videoTitle }: CommentDraw
           transform: open ? `translateY(${Math.max(0, dragY)}px)` : "translateY(100%)",
           transition: dragY ? "none" : "transform 0.35s cubic-bezier(.32,.72,0,1)",
         }}
-        onTouchStart={(e) => { touchStartY.current = e.touches[0].clientY; }}
+        onTouchStart={(e) => { startY.current = e.touches[0].clientY; }}
         onTouchMove={(e) => {
-          if (touchStartY.current === null) return;
-          const dy = e.touches[0].clientY - touchStartY.current;
-          setDragY(dy);
+          if (startY.current === null) return;
+          setDragY(Math.max(0, e.touches[0].clientY - startY.current));
         }}
         onTouchEnd={() => {
           if (dragY > 100) onClose();
           setDragY(0);
-          touchStartY.current = null;
+          startY.current = null;
+        }}
+        onMouseDown={(e) => { startY.current = e.clientY; isDragging.current = true; }}
+        onMouseMove={(e) => {
+          if (!isDragging.current || startY.current === null) return;
+          setDragY(Math.max(0, e.clientY - startY.current));
+        }}
+        onMouseUp={() => {
+          if (dragY > 100) onClose();
+          setDragY(0);
+          startY.current = null;
+          isDragging.current = false;
+        }}
+        onMouseLeave={() => {
+          if (isDragging.current) {
+            if (dragY > 100) onClose();
+            setDragY(0);
+            startY.current = null;
+            isDragging.current = false;
+          }
         }}
       >
         {/* 핸들 */}

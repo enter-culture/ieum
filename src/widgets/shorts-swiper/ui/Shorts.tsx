@@ -153,49 +153,42 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
             <MuteToggleIcon showVolumeIcon={showVolumeIcon} isMuted={isMuted} />
           </div>
 
-          {/* 오른쪽 하트 버튼 */}
-          <div className="absolute right-4 bottom-28 z-20 flex flex-col items-center gap-1.5">
+        </div>
 
-            {/* 퍼지는 하트 파티클 */}
-            {floatingHearts.map((h) => (
-              <div
-                key={h.id}
-                style={{
-                  position: "absolute",
-                  bottom: 20,
-                  left: "50%",
-                  marginLeft: -h.size / 2,
-                  pointerEvents: "none",
-                  // CSS 커스텀 변수로 각 하트의 방향·회전 전달
-                  ["--hx" as string]: `${h.x}px`,
-                  ["--hr" as string]: `${h.rotate}deg`,
-                  animation: `heart-burst ${h.duration}ms cubic-bezier(.25,.46,.45,.94) ${h.delay}ms forwards`,
-                }}
-              >
-                <HeartSVG size={h.size} fill="#ff2d55" />
-              </div>
-            ))}
-
-            {/* 메인 하트 버튼 */}
-            <button
-              onClick={(e) => { e.stopPropagation(); handleLike(); }}
-              className="flex flex-col items-center gap-1"
+        {/* 하트 버튼 — 비디오 오른쪽 검정 영역에 위치 */}
+        <div className="absolute right-6 bottom-28 z-20 flex flex-col items-center gap-1.5">
+          {floatingHearts.map((h) => (
+            <div
+              key={h.id}
+              style={{
+                position: "absolute",
+                bottom: 20,
+                left: "50%",
+                marginLeft: -h.size / 2,
+                pointerEvents: "none",
+                ["--hx" as string]: `${h.x}px`,
+                ["--hr" as string]: `${h.rotate}deg`,
+                animation: `heart-burst ${h.duration}ms cubic-bezier(.25,.46,.45,.94) ${h.delay}ms forwards`,
+              }}
             >
-              <div
-                key={popKey}
-                style={{ animation: liked ? "heart-spring 0.5s cubic-bezier(.36,.07,.19,.97) forwards" : "none" }}
-              >
-                <HeartSVG
-                  size={36}
-                  fill={liked ? "#ff2d55" : "none"}
-                  stroke="white"
-                />
-              </div>
-              <span className="text-white text-xs font-semibold" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.7)" }}>
-                {likeCount.toLocaleString()}
-              </span>
-            </button>
-          </div>
+              <HeartSVG size={h.size} fill="#ff2d55" />
+            </div>
+          ))}
+
+          <button
+            onClick={(e) => { e.stopPropagation(); handleLike(); }}
+            className="flex flex-col items-center gap-1"
+          >
+            <div
+              key={popKey}
+              style={{ animation: liked ? "heart-spring 0.5s cubic-bezier(.36,.07,.19,.97) forwards" : "none" }}
+            >
+              <HeartSVG size={36} fill={liked ? "#ff2d55" : "none"} stroke="white" />
+            </div>
+            <span className="text-white text-xs font-semibold" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.7)" }}>
+              {likeCount.toLocaleString()}
+            </span>
+          </button>
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 z-30">

@@ -11,8 +11,9 @@ const HERITAGE_CODES: Record<string, { ccbaAsno: string; ccbaCtcd: string; ccbaK
   "taekkyeon":       { ccbaAsno: "0000750000000", ccbaCtcd: "33", ccbaKdcd: "17" },
 };
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
-  const code = HERITAGE_CODES[params.id];
+export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const code = HERITAGE_CODES[id];
   if (!code) return NextResponse.json({ error: "not found" }, { status: 404 });
 
   const key = encodeURIComponent(API_KEY);
@@ -35,10 +36,13 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   const images: string[] = [];
 
   if (imgItem) {
-    const arr = Array.isArray(imgItem) ? imgItem : [imgItem];
-    arr.forEach((i: { imageUrl?: string }) => {
-      if (i.imageUrl) images.push(i.imageUrl);
-    });
+    // xml2js가 같은 태그명 여러 개를 배열로 묶음 → imageUrl이 배열일 수 있음
+    const imageUrls = imgItem.imageUrl;
+    if (Array.isArray(imageUrls)) {
+      images.push(...imageUrls.filter(Boolean));
+    } else if (typeof imageUrls === "string" && imageUrls) {
+      images.push(imageUrls);
+    }
   }
 
   return NextResponse.json({

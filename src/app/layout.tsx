@@ -14,10 +14,10 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
       </head>
-      <body className="relative bg-black">
+      <body className="relative bg-white">
         <Suspense fallback={null}>
           <SWRProvider>
-            <main className="bg-black w-full h-dvh overflow-y-auto">
+            <main className="bg-white w-full h-dvh overflow-y-auto">
               {children}
             </main>
           </SWRProvider>

@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { setIsCompletedOnboardingToSessionStorage, setOnboardingDataToSessionStorage } from "@/shared/lib/session-storage";
 import { useState } from "react";
 import Loading from "@/shared/ui/Loading/Loading";
+import { useAuth } from "@/shared/lib/auth-store";
+import { saveMyOnboarding } from "@/shared/api/onboarding";
 
 interface OnboardingFooterProps {
   step: "1" | "2";
@@ -14,6 +16,7 @@ interface OnboardingFooterProps {
 
 export default function OnboardingFooter({ step, isLastStep, onNextStep }: OnboardingFooterProps) {
   const router = useRouter();
+  const { isLoggedIn } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const { getValues, watch } = useFormContext<OnboardingSchema>();
 
@@ -33,7 +36,17 @@ export default function OnboardingFooter({ step, isLastStep, onNextStep }: Onboa
     setOnboardingDataToSessionStorage(raw);
     setIsCompletedOnboardingToSessionStorage();
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // 로그인 상태면 서버에도 저장 (다음 로그인/다른 기기에서 복원)
+    if (isLoggedIn) {
+      try {
+        await saveMyOnboarding({
+          vibeList: raw.vibeList,
+          placeCategoryList: raw.placeCategoryList,
+        });
+      } catch {
+        // 저장 실패해도 진입은 막지 않는다
+      }
+    }
     router.push("/explore");
   };
 

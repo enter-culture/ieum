@@ -225,19 +225,40 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
             })}
         </div>
 
-        {/* 카드명 */}
+        {/* 카드명 + 선택 버튼 */}
         <div style={{
-          textAlign: "center",
+          width: "100%",
+          padding: "0 24px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 10,
           opacity: uiReady ? 1 : 0,
           transform: uiReady ? "translateY(0)" : "translateY(8px)",
           transition: "opacity 0.35s ease, transform 0.35s ease",
-          paddingBottom: 4,
         }}>
           <p style={{ fontSize: "1rem", color: "#333", fontWeight: 700 }}>
             {activeOption?.label}
-            {isActiveSelected && <span style={{ marginLeft: 8, color: "#ee7f12" }}>✓</span>}
           </p>
-          <p style={{ fontSize: "0.75rem", color: "#aaa", marginTop: 2 }}>탭해서 선택 · 스와이프로 이동</p>
+          <button
+            type="button"
+            onClick={() => activeOption && onSelect(activeOption.value)}
+            style={{
+              width: "100%",
+              padding: "14px 0",
+              borderRadius: "9999px",
+              fontSize: "1rem",
+              fontWeight: 700,
+              cursor: "pointer",
+              transition: "all 0.2s",
+              background: isActiveSelected ? "transparent" : "#ee7f12",
+              color: isActiveSelected ? "#ee7f12" : "#fff",
+              border: isActiveSelected ? "2px solid #ee7f12" : "2px solid transparent",
+              boxShadow: isActiveSelected ? "none" : "0 4px 16px rgba(238,127,18,0.3)",
+            }}
+          >
+            {isActiveSelected ? "✓ 선택됨 (취소하려면 탭)" : "이 카드 선택"}
+          </button>
         </div>
       </div>
     </>

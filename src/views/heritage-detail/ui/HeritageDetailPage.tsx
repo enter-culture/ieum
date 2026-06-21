@@ -40,7 +40,7 @@ export default function HeritageDetailPage({ id }: { id: string }) {
     </div>
   );
 
-  const allImages = data.images.length > 0 ? data.images : data.thumbnail ? [data.thumbnail] : [];
+  const allImages = (data.images ?? []).length > 0 ? data.images : data.thumbnail ? [data.thumbnail] : [];
   const formattedDate = data.designatedAt
     ? `${data.designatedAt.slice(0, 4)}년 ${data.designatedAt.slice(4, 6)}월 ${data.designatedAt.slice(6, 8)}일`
     : "";

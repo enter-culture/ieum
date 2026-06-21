@@ -19,8 +19,10 @@ export default function CommentDrawer({ open, onClose, videoTitle }: CommentDraw
     { id: 2, text: "처음 봤는데 너무 신기해요 😮", createdAt: "1분 전" },
   ]);
   const [input, setInput] = useState("");
+  const [dragY, setDragY] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const idRef = useRef(3);
+  const touchStartY = useRef<number | null>(null);
 
   useEffect(() => {
     if (open) setTimeout(() => inputRef.current?.focus(), 350);
@@ -54,12 +56,23 @@ export default function CommentDrawer({ open, onClose, videoTitle }: CommentDraw
         className="fixed left-0 right-0 bottom-0 z-50 bg-white rounded-t-2xl flex flex-col"
         style={{
           height: "90dvh",
-          transform: open ? "translateY(0)" : "translateY(100%)",
-          transition: "transform 0.35s cubic-bezier(.32,.72,0,1)",
+          transform: open ? `translateY(${Math.max(0, dragY)}px)` : "translateY(100%)",
+          transition: dragY ? "none" : "transform 0.35s cubic-bezier(.32,.72,0,1)",
+        }}
+        onTouchStart={(e) => { touchStartY.current = e.touches[0].clientY; }}
+        onTouchMove={(e) => {
+          if (touchStartY.current === null) return;
+          const dy = e.touches[0].clientY - touchStartY.current;
+          setDragY(dy);
+        }}
+        onTouchEnd={() => {
+          if (dragY > 100) onClose();
+          setDragY(0);
+          touchStartY.current = null;
         }}
       >
         {/* 핸들 */}
-        <div className="flex justify-center pt-3 pb-2 flex-shrink-0">
+        <div className="flex justify-center pt-3 pb-2 flex-shrink-0 cursor-grab">
           <div className="w-10 h-1 rounded-full bg-gray-300" />
         </div>
 

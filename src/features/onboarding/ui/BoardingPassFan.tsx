@@ -117,8 +117,8 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
               const isVisible  = Math.abs(diff) <= 3;
               const isSelected = selectedValues.includes(option.value);
 
-              const stackTy      = Math.max(0, diff) * 2;
-              const preTransform = `translateY(${stackTy}px) scale(${1 - Math.max(0, diff) * 0.008})`;
+              const stackTy      = Math.max(0, diff) * 3;
+              const preTransform = `translateY(${stackTy}px) scale(${1 - Math.max(0, diff) * 0.01})`;
               const fanTransform = `translateX(${slot.tx}px) translateY(${slot.ty}px) scale(${slot.scale}) rotate(${slot.rot}deg)`;
 
               return (
@@ -132,10 +132,10 @@ export default function BoardingPassFan({ options, selectedValues, onSelect }: B
                   style={{
                     position: "absolute",
                     left: `calc(50% - ${CARD_W / 2}px)`,
-                    bottom: 0,
+                    top: "50%",
                     width: `${CARD_W}px`,
-                    transformOrigin: "bottom center",
-                    transform: fanned ? fanTransform : preTransform,
+                    transformOrigin: "center center",
+                    transform: fanned ? `translateY(-50%) ${fanTransform}` : `translateY(-50%) ${preTransform}`,
                     zIndex: slot.z,
                     opacity: isVisible ? (isFlipped || !fanned ? slot.opacity : 0) : 0,
                     cursor: fanned && isVisible ? "pointer" : "default",

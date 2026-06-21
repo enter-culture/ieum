@@ -23,9 +23,6 @@ export default function ShortsInfoSection({ item }: ShortsInfoSectionProps) {
         <h2 className="text-white text-xl font-bold drop-shadow-md">{item.title}</h2>
         <p className="text-white/80 text-sm mt-1 drop-shadow-sm">{item.address}</p>
       </div>
-      {item.holders && item.holders.length > 0 && (
-        <p className="text-white/70 text-xs">보유자: {item.holders.join(", ")}</p>
-      )}
       <DetailDrawerButton item={item} />
     </div>
   );

@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { SWRProvider } from "@/shared/lib/swr-provider";
+import Navigation from "@/widgets/navigation/ui/Navigation";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
@@ -20,6 +21,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             <main className="bg-white w-full h-dvh overflow-y-auto">
               {children}
             </main>
+            <Navigation />
           </SWRProvider>
         </Suspense>
       </body>

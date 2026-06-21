@@ -1,42 +1,97 @@
 "use client";
-import { useMemo } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import clsx from "clsx";
+
+const NAV_ITEMS = [
+  {
+    path: "/explore",
+    label: "쇼츠",
+    icon: (active: boolean) => (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill={active ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+        <polygon points="5,3 19,12 5,21"/>
+      </svg>
+    ),
+  },
+  {
+    path: "/upload",
+    label: "",
+    isCenter: true,
+    icon: () => (
+      <div className="w-12 h-12 rounded-2xl bg-[#ee7f12] flex items-center justify-center shadow-lg" style={{ boxShadow: "0 4px 14px rgba(238,127,18,0.4)" }}>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </div>
+    ),
+  },
+  {
+    path: "/destinations",
+    label: "여행지",
+    icon: (active: boolean) => (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill={active ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+        <circle cx="12" cy="10" r="3" fill={active ? "white" : "currentColor"}/>
+      </svg>
+    ),
+  },
+  {
+    path: "/profile",
+    label: "프로필",
+    icon: (active: boolean) => (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill={active ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+    ),
+  },
+];
+
+const HIDE_NAV = ["/onboarding", "/heritage"];
 
 export default function Navigation() {
   const pathname = usePathname() ?? "";
   const router = useRouter();
 
-  const setActiveColor = useMemo(() => {
-    return (route: string) => pathname.startsWith(route) ? "text-[#ee7f12]" : "text-gray-400";
-  }, [pathname]);
+  if (HIDE_NAV.some((p) => pathname.startsWith(p)) || pathname === "/") return null;
 
-  const EXCLUDE_NAVIGATION_PATHS = ["/onboarding", "/plan"];
-  const isExcludeNavigation = EXCLUDE_NAVIGATION_PATHS.some(
-    (path) => pathname.startsWith(path) || pathname === "/"
-  );
-  if (isExcludeNavigation) return null;
+  const isExplore = pathname.startsWith("/explore");
 
   return (
-    <nav className="fixed bottom-0 left-1/2 z-10 h-20 max-w-[393px] w-full -translate-x-1/2 bg-white">
-      <ul className="flex items-center justify-around h-full">
-        <li>
-          <button className="flex flex-col items-center justify-center gap-2 h-full w-full p-4" onClick={() => router.push("/explore")}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none" className={setActiveColor("/explore")}>
-              <path d="M20.35 21L14.05 14.7C13.55 15.1 12.975 15.4167 12.325 15.65C11.675 15.8833 10.9833 16 10.25 16C8.43333 16 6.89583 15.3708 5.6375 14.1125C4.37917 12.8542 3.75 11.3167 3.75 9.5C3.75 7.68333 4.37917 6.14583 5.6375 4.8875C6.89583 3.62917 8.43333 3 10.25 3C12.0667 3 13.6042 3.62917 14.8625 4.8875C16.1208 6.14583 16.75 7.68333 16.75 9.5C16.75 10.2333 16.6333 10.925 16.4 11.575C16.1667 12.225 15.85 12.8 15.45 13.3L21.75 19.6L20.35 21ZM10.25 14C11.5 14 12.5625 13.5625 13.4375 12.6875C14.3125 11.8125 14.75 10.75 14.75 9.5C14.75 8.25 14.3125 7.1875 13.4375 6.3125C12.5625 5.4375 11.5 5 10.25 5C9 5 7.9375 5.4375 7.0625 6.3125C6.1875 7.1875 5.75 8.25 5.75 9.5C5.75 10.75 6.1875 11.8125 7.0625 12.6875C7.9375 13.5625 9 14 10.25 14Z" fill="currentColor"/>
-            </svg>
-            <span className={clsx("text-xs", setActiveColor("/explore"))}>탐색</span>
-          </button>
-        </li>
-        <li>
-          <button className="flex flex-col items-center justify-center gap-2 h-full w-full p-4" onClick={() => router.push("/saved")}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none" className={setActiveColor("/saved")}>
-              <path d="M5.41602 21V5C5.41602 4.45 5.61185 3.97917 6.00352 3.5875C6.39518 3.19583 6.86602 3 7.41602 3H17.416C17.966 3 18.4368 3.19583 18.8285 3.5875C19.2202 3.97917 19.416 4.45 19.416 5V21L12.416 18L5.41602 21ZM7.41602 17.95L12.416 15.8L17.416 17.95V5H7.41602V17.95Z" fill="currentColor"/>
-            </svg>
-            <span className={clsx("text-xs", setActiveColor("/saved"))}>저장</span>
-          </button>
-        </li>
-      </ul>
+    <nav
+      className="fixed bottom-0 left-0 right-0 z-50"
+      style={{
+        background: isExplore ? "rgba(0,0,0,0.6)" : "rgba(255,255,255,0.95)",
+        backdropFilter: "blur(16px)",
+        borderTop: isExplore ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(0,0,0,0.06)",
+        paddingBottom: "env(safe-area-inset-bottom)",
+      }}
+    >
+      <div className="flex items-center justify-around h-16 px-2">
+        {NAV_ITEMS.map((item) => {
+          const active = pathname === item.path || (item.path !== "/upload" && pathname.startsWith(item.path));
+          const color = isExplore ? "white" : active ? "#ee7f12" : "#9ca3af";
+
+          if (item.isCenter) {
+            return (
+              <button key={item.path} onClick={() => router.push(item.path)} className="flex items-center justify-center">
+                {item.icon(false)}
+              </button>
+            );
+          }
+
+          return (
+            <button
+              key={item.path}
+              onClick={() => router.push(item.path)}
+              className="flex flex-col items-center gap-0.5 flex-1 py-1"
+              style={{ color }}
+            >
+              {item.icon(active && !isExplore)}
+              {item.label && <span className="text-[10px] font-medium">{item.label}</span>}
+            </button>
+          );
+        })}
+      </div>
     </nav>
   );
 }

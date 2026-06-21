@@ -19,10 +19,10 @@ export default function CommentDrawer({ open, onClose, videoTitle }: CommentDraw
     { id: 2, text: "처음 봤는데 너무 신기해요 😮", createdAt: "1분 전" },
   ]);
   const [input, setInput] = useState("");
-  const [dragY, setDragY] = useState(0);
+  const [dragX, setDragX] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const idRef = useRef(3);
-  const startY = useRef<number | null>(null);
+  const startX = useRef<number | null>(null);
   const isDragging = useRef(false);
 
   useEffect(() => {
@@ -52,54 +52,52 @@ export default function CommentDrawer({ open, onClose, videoTitle }: CommentDraw
         onClick={onClose}
       />
 
-      {/* 드로어 */}
+      {/* 드로어 — 오른쪽에서 슬라이드인 */}
       <div
-        className="fixed left-0 right-0 bottom-0 z-50 bg-white rounded-t-2xl flex flex-col"
+        className="fixed top-0 right-0 bottom-0 z-50 bg-white flex flex-col"
         style={{
-          height: "90dvh",
-          transform: open ? `translateY(${Math.max(0, dragY)}px)` : "translateY(100%)",
-          transition: dragY ? "none" : "transform 0.35s cubic-bezier(.32,.72,0,1)",
+          width: "100%",
+          transform: open ? `translateX(${Math.max(0, dragX)}px)` : "translateX(100%)",
+          transition: dragX ? "none" : "transform 0.35s cubic-bezier(.32,.72,0,1)",
         }}
-        onTouchStart={(e) => { startY.current = e.touches[0].clientY; }}
+        onTouchStart={(e) => { startX.current = e.touches[0].clientX; }}
         onTouchMove={(e) => {
-          if (startY.current === null) return;
-          setDragY(Math.max(0, e.touches[0].clientY - startY.current));
+          if (startX.current === null) return;
+          setDragX(Math.max(0, e.touches[0].clientX - startX.current));
         }}
         onTouchEnd={() => {
-          if (dragY > 100) onClose();
-          setDragY(0);
-          startY.current = null;
+          if (dragX > 80) onClose();
+          setDragX(0);
+          startX.current = null;
         }}
-        onMouseDown={(e) => { startY.current = e.clientY; isDragging.current = true; }}
+        onMouseDown={(e) => { startX.current = e.clientX; isDragging.current = true; }}
         onMouseMove={(e) => {
-          if (!isDragging.current || startY.current === null) return;
-          setDragY(Math.max(0, e.clientY - startY.current));
+          if (!isDragging.current || startX.current === null) return;
+          setDragX(Math.max(0, e.clientX - startX.current));
         }}
         onMouseUp={() => {
-          if (dragY > 100) onClose();
-          setDragY(0);
-          startY.current = null;
+          if (dragX > 80) onClose();
+          setDragX(0);
+          startX.current = null;
           isDragging.current = false;
         }}
         onMouseLeave={() => {
           if (isDragging.current) {
-            if (dragY > 100) onClose();
-            setDragY(0);
-            startY.current = null;
+            if (dragX > 80) onClose();
+            setDragX(0);
+            startX.current = null;
             isDragging.current = false;
           }
         }}
       >
-        {/* 핸들 */}
-        <div className="flex justify-center pt-3 pb-2 flex-shrink-0 cursor-grab">
-          <div className="w-10 h-1 rounded-full bg-gray-300" />
+        {/* 헤더 */}
+        <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 flex-shrink-0">
+          <button onClick={onClose} className="text-gray-500 text-xl">←</button>
+          <h3 className="text-sm font-bold text-gray-800">댓글</h3>
         </div>
 
-        {/* 헤더 */}
-        <div className="px-5 pb-3 border-b border-gray-100 flex-shrink-0">
-          <h3 className="text-sm font-bold text-gray-800 text-center">
-            댓글 {comments.length}개
-          </h3>
+        <div className="px-5 pb-2 flex-shrink-0">
+          <span className="text-xs text-gray-400">댓글 {comments.length}개</span>
         </div>
 
         {/* 댓글 목록 */}
